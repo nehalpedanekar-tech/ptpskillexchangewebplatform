@@ -1,0 +1,12 @@
+<svg viewBox="0 0 420 100" xmlns="http://www.w3.org/2000/svg" font-family="Sora, sans-serif">
+  <rect x="0" y="14" width="72" height="72" rx="18" fill="#180F2E"/>
+  <circle cx="27" cy="41" r="12" fill="#2FD1BC"/>
+  <circle cx="45" cy="59" r="12" fill="#FF6B5B"/>
+  <path d="M27 41L45 59" stroke="#FAF9FE" stroke-width="4" stroke-linecap="round"/>
+  <path d="M27 59L45 41" stroke="#FAF9FE" stroke-width="4" stroke-linecap="round" opacity="0.35"/>
+  <circle cx="36" cy="50" r="5" fill="#FAF9FE"/>
+
+  <text x="92" y="58" font-size="34" font-weight="800" fill="#4F35A6">PTP</text>
+  <text x="152" y="58" font-size="34" font-weight="700" fill="#1A1030">skill<tspan fill="#FF6B5B" font-weight="800">X</tspan>change</text>
+  <text x="92" y="76" font-size="12" font-weight="500" fill="#63597C" letter-spacing="0.5">Learn peer to peer</text>
+</svg>

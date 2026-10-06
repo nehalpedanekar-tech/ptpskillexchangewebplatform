@@ -1,0 +1,10 @@
+fastapi
+httpx
+python-multipart
+sqlalchemy
+python-jose
+passlib[bcrypt]
+email-validator
+python-dotenv
+sentence-transformers
+google-generativeai

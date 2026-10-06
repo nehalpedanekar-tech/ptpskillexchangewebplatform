@@ -1,0 +1,3093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PTPskillXchange — Learn peer to peer</title>
+<link rel="stylesheet" href="../theme.css" />
+<style>
+:root{
+  --ink: var(--color-bg-dark);
+  --ink-2: var(--color-bg-dark-elevated);
+  --ink-3: var(--color-bg-dark-raised);
+  --paper: var(--color-background);
+  --paper-2: var(--color-surface);
+  --paper-3: var(--color-border);
+  --violet: var(--color-primary);
+  --violet-dark: var(--color-primary-dark);
+  --violet-light: var(--color-primary-soft);
+  --cyan: var(--color-accent);
+  --cyan-dark: var(--color-accent-dark);
+  --coral: var(--color-error);
+  --coral-dark: var(--color-error);
+  --text-dark: var(--color-text-dark);
+  --text-muted: var(--color-text-muted);
+  --text-faint: var(--color-text-faint);
+  --text-light: var(--color-text-light);
+  --text-light-muted: var(--color-text-on-dark-muted);
+  --font-display: var(--theme-font-display);
+  --font-body: var(--theme-font-body);
+  --font-mono: var(--theme-font-mono);
+  --radius: var(--radius-card);
+  --radius-sm: var(--radius-control);
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+html{ scroll-behavior:smooth; }
+body{ font-family: var(--font-body); background: var(--paper); color: var(--text-dark); -webkit-font-smoothing:antialiased; }
+img,svg{ display:block; max-width:100%; }
+a{ color:inherit; text-decoration:none; }
+button{ font-family:inherit; cursor:pointer; border:none; background:none; }
+input{ font-family:inherit; }
+::selection{ background: var(--cyan); color: var(--ink); }
+
+/* ===== logo ===== */
+.logo-mark{ width:38px; height:38px; border-radius:var(--theme-radius); background: var(--ink); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.logo-mark svg{ width:22px; height:22px; }
+.wordmark{ font-family: var(--font-display); font-weight:800; font-size:19px; letter-spacing:-0.01em; display:flex; align-items:baseline; }
+.wm-ptp{ color: var(--violet-dark); }
+.wm-rest{ color: var(--text-dark); font-weight:700; }
+.wm-x{ color: var(--coral); }
+.brand{ display:flex; align-items:center; gap:11px; }
+.brand.on-dark .wm-rest{ color: var(--text-light); }
+.brand.on-dark .wm-ptp{ color: var(--cyan); }
+.brand.on-dark .logo-mark{ background: var(--violet); }
+
+/* ===== pages ===== */
+.page{ display:none; min-height:100vh; }
+.page.active{ display:block; animation: fadein .45s ease; }
+@keyframes fadein{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:none;} }
+
+/* ===== nav ===== */
+.nav{ display:flex; align-items:center; justify-content:space-between; padding:22px 48px; max-width:1300px; margin:0 auto; }
+.nav-links{ display:flex; gap:32px; align-items:center; }
+.nav-links a{ font-size:14.5px; color: var(--text-muted); font-weight:600; transition:.2s; }
+.nav-links a:hover{ color: var(--text-dark); }
+.nav-cta{ display:flex; gap:12px; }
+
+.btn{ display:inline-flex; align-items:center; justify-content:center; gap:var(--space-sm); padding:var(--space-md) var(--space-lg); border-radius:var(--theme-radius); font-size:14.5px; font-weight:700; transition:.2s; font-family: var(--font-body); }
+.btn-primary{ background: var(--color-primary); border-color:var(--color-primary); color:var(--color-text-light); }
+.btn-primary:hover{ background: var(--violet-dark); transform:translateY(-1px); box-shadow:0 8px 20px rgba(var(--color-primary-rgb),0.32); }
+.btn-accent{ background: var(--color-accent); border-color:var(--color-accent); color:var(--color-bg-dark); }
+.btn-accent:hover{ background: var(--color-accent-dark); border-color:var(--color-accent-dark); transform:translateY(-1px); box-shadow:0 8px 20px rgba(var(--color-accent-rgb),0.32); }
+.btn-secondary{ background:var(--color-card-bg); color:var(--text-dark); border:1.5px solid var(--paper-3); }
+.btn-secondary:hover{ background:var(--color-surface); border-color:var(--color-primary); color:var(--color-primary-dark); }
+.btn[aria-busy="true"]{ cursor:wait; opacity:.72; }
+.button-loading-content{ display:inline-flex; align-items:center; justify-content:center; gap:8px; }
+.loading-spinner,.avatar-edit-btn[aria-busy="true"]::after{ width:12px; height:12px; flex:0 0 auto; border:2px solid currentColor; border-top-color:transparent; border-radius:50%; animation:loading-spin .7s linear infinite; }
+@keyframes loading-spin{ to{ transform:rotate(360deg); } }
+.btn-block{ width:100%; }
+.btn-lg{ padding:var(--space-md) var(--space-xl); font-size:15.5px; border-radius:var(--theme-radius); }
+
+/* ===== hero ===== */
+.hero{ max-width:1300px; margin:0 auto; padding:60px 48px 30px; display:grid; grid-template-columns:1.05fr 0.95fr; gap:60px; align-items:center; position:relative; }
+.eyebrow{ display:inline-flex; align-items:center; gap:var(--space-sm); font-family: var(--font-mono); font-size:var(--font-size-xs); letter-spacing:0.06em; text-transform:uppercase; color: var(--violet-dark); background: var(--violet-light); padding:7px 13px 7px 10px; border-radius:999px; margin-bottom:22px; }
+.eyebrow .dot{ width:6px; height:6px; border-radius:50%; background: var(--violet); box-shadow:0 0 0 3px rgba(var(--color-primary-rgb),0.22); }
+.hero h1{ font-family: var(--font-display); font-weight:700; font-size:var(--font-size-h1); line-height:1.08; letter-spacing:-0.02em; margin-bottom:20px; }
+.hero h1 span{ color: var(--violet); }
+.hero h1 .accent-x{ color: var(--coral); }
+.hero p.lead{ font-size:17px; color: var(--text-muted); line-height:1.65; max-width:460px; margin-bottom:32px; }
+.hero-actions{ display:flex; gap:14px; margin-bottom:38px; }
+.trust-row{ display:flex; gap:32px; padding-top:26px; border-top:1px solid var(--paper-3); }
+.trust-stat b{ font-family: var(--font-display); font-size:24px; display:block; }
+.trust-stat span{ font-size:12px; color: var(--text-faint); }
+
+/* network graphic */
+.network-card{ background: var(--ink); border-radius: var(--theme-radius); padding:0; position:relative; overflow:hidden; box-shadow: 0 30px 70px -24px rgba(var(--color-bg-dark-rgb),0.5); aspect-ratio: 1/0.92; }
+.network-card svg{ width:100%; height:100%; }
+.network-card circle[role="button"]{ cursor:pointer; transition:stroke .15s,stroke-width .15s; }
+.network-card circle[role="button"]:hover,.network-card circle[role="button"]:focus{ stroke:var(--color-card-bg); stroke-width:2.5; outline:none; }
+.network-message{ position:absolute; left:var(--space-md); right:var(--space-md); bottom:var(--space-md); color:var(--text-light-muted); font-family:var(--font-mono); font-size:var(--font-size-xs); text-align:center; }
+.network-message-icon{ font-size:17px; line-height:1; }
+.network-message-copy{ max-width:280px; }
+.node-label{ font-family: var(--font-mono); font-size:9.5px; fill: var(--text-light-muted); }
+.node-tag{ font-family: var(--font-mono); font-size:9px; fill: var(--ink); font-weight:700; }
+
+/* ===== sections ===== */
+.section{ max-width:1300px; margin:0 auto; padding:86px 48px; }
+.section-head{ max-width:560px; margin-bottom:50px; }
+.section-head .tag{ font-family: var(--font-mono); font-size:var(--font-size-xs); letter-spacing:0.06em; text-transform:uppercase; color: var(--coral-dark); margin-bottom:14px; display:block; }
+.section-head h2{ font-family: var(--font-display); font-size:var(--font-size-h2); font-weight:700; letter-spacing:-0.015em; line-height:1.15; margin-bottom:14px; }
+.section-head p{ color: var(--text-muted); font-size:16px; line-height:1.6; }
+
+.steps{ display:grid; grid-template-columns:repeat(3,1fr); gap:26px; }
+.step-card{ background: var(--paper-2); border-radius: var(--radius); padding:var(--space-2xl) var(--space-xl); }
+.step-code{ font-family: var(--font-mono); font-size:11.5px; color: var(--violet-dark); letter-spacing:0.05em; margin-bottom:16px; display:block; }
+.step-card h3{ font-family: var(--font-display); font-size:var(--font-size-h3); font-weight:700; margin-bottom:10px; }
+.step-card p{ color: var(--text-muted); font-size:14.5px; line-height:1.6; }
+
+.features{ display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
+.feature-card{ padding:var(--space-xl) var(--space-lg); border-radius: var(--radius-sm); border:1px solid var(--paper-3); transition:.2s; }
+.feature-card:hover{ border-color: var(--violet); transform:translateY(-3px); }
+.feature-ico{ width:40px; height:40px; border-radius:var(--theme-radius); background: var(--ink); display:flex; align-items:center; justify-content:center; margin-bottom:var(--space-lg); }
+.feature-card h4{ font-size:15px; font-weight:800; margin-bottom:7px; font-family: var(--font-display); }
+.feature-card p{ font-size:13.3px; color: var(--text-muted); line-height:1.55; }
+
+.cta-band{ background: linear-gradient(135deg, var(--ink), var(--ink-3)); border-radius:var(--theme-radius); padding:var(--space-3xl) var(--space-2xl); display:flex; align-items:center; justify-content:space-between; gap:var(--space-2xl); max-width:1300px; margin:0 auto 86px; position:relative; overflow:hidden; }
+.cta-band h2{ font-family: var(--font-display); color: var(--text-light); font-size:var(--font-size-h2); font-weight:700; letter-spacing:-0.015em; max-width:460px; line-height:1.22; }
+.cta-band p{ color: var(--text-light-muted); margin-top:9px; font-size:15px; }
+
+.footer{ border-top:1px solid var(--paper-3); padding:34px 48px; max-width:1300px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:var(--space-md); }
+.footer span{ font-size:12.5px; color: var(--text-faint); font-family: var(--font-mono); }
+
+/* ===== auth ===== */
+.auth-shell{ display:grid; grid-template-columns:0.84fr 1fr; min-height:100vh; }
+.auth-side{ background: radial-gradient(circle at 20% 15%, var(--ink-3), var(--ink) 60%); color: var(--text-light); padding:44px 46px; position:relative; display:flex; flex-direction:column; justify-content:space-between; overflow:hidden; }
+.auth-copy h2{ font-family: var(--font-display); font-size:var(--font-size-h2); font-weight:700; line-height:1.2; letter-spacing:-0.015em; margin:36px 0 14px; max-width:370px; }
+.auth-copy p{ color: var(--text-light-muted); font-size:14.5px; line-height:1.65; max-width:350px; }
+
+.peer-graph{ margin-top:30px; position:relative; height:210px; }
+.peer-graph svg{ width:100%; height:100%; }
+
+.auth-side-foot{ display:flex; align-items:center; gap:var(--space-md); font-family: var(--font-mono); font-size:var(--font-size-xs); color: var(--text-light-muted); }
+.auth-side-foot .dots{ display:flex; gap:5px; }
+.auth-side-foot .dots div{ width:7px; height:7px; border-radius:50%; }
+
+.auth-main{ display:flex; align-items:center; justify-content:center; padding:46px var(--space-xl); background: var(--paper); }
+.auth-box{ width:100%; max-width:400px; }
+.auth-box .top-link{ font-family: var(--font-mono); font-size:12px; color: var(--text-muted); display:flex; align-items:center; gap:6px; margin-bottom:32px; }
+.auth-box .top-link:hover{ color: var(--violet-dark); }
+.auth-box h1{ font-family: var(--font-display); font-size:var(--font-size-h1); font-weight:700; letter-spacing:-0.01em; margin-bottom:8px; }
+.auth-box .sub{ color: var(--text-muted); font-size:14px; margin-bottom:30px; line-height:1.55; }
+.auth-box .sub b{ color: var(--text-dark); font-weight:700; }
+
+.field{ margin-bottom:17px; }
+.field label{ display:flex; justify-content:space-between; font-size:var(--font-size-sm); font-weight:700; color: var(--text-dark); margin-bottom:var(--space-sm); }
+.field label .fp{ font-weight:600; color: var(--color-error); font-size:var(--font-size-sm); }
+.field-error{ margin-top:var(--space-xs); color:var(--color-error); font-size:var(--font-size-sm); font-weight:700; line-height:1.4; }
+.field-error[hidden]{ display:none; }
+.field.invalid .input-wrap input{ border-color:var(--color-error); }
+.field.invalid .input-wrap input:focus{ box-shadow:0 0 0 4px rgba(var(--color-error-rgb),.12); }
+.input-wrap{ position:relative; }
+.input-wrap input{ width:100%; padding:var(--space-md); border-radius:var(--theme-radius); border:1.5px solid var(--paper-3); background:var(--color-card-bg); font-size:var(--font-size-lg); color: var(--text-dark); transition:.18s; }
+.input-wrap input::placeholder{ color: var(--text-faint); }
+.input-wrap input:focus{ outline:none; border-color: var(--violet); box-shadow:0 0 0 4px rgba(var(--color-primary-rgb),0.12); }
+.input-wrap .toggle-eye{ position:absolute; right:13px; top:50%; transform:translateY(-50%); color: var(--text-faint); }
+.input-wrap .toggle-eye:hover{ color: var(--violet-dark); }
+.input-wrap.has-icon input{ padding-right:42px; }
+
+.checkbox-row{ display:flex; align-items:center; gap:9px; margin:4px 0 20px; }
+.checkbox-row input{ width:16px; height:16px; accent-color: var(--violet); }
+.checkbox-row label{ font-size:13px; color: var(--text-muted); }
+.checkbox-row a{ color: var(--text-dark); font-weight:700; text-decoration:underline; text-underline-offset:2px; }
+
+.divider{ display:flex; align-items:center; gap:14px; margin:24px 0; }
+.divider .line{ flex:1; height:1px; background: var(--paper-3); }
+.divider span{ font-size:11px; color: var(--text-faint); font-family: var(--font-mono); }
+
+.social-row{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.social-btn{ display:flex; align-items:center; justify-content:center; gap:var(--space-sm); padding:var(--space-md); border-radius:var(--theme-radius); border:1.5px solid var(--paper-3); font-size:var(--font-size-md); font-weight:700; }
+.social-btn:hover{ border-color: var(--violet); }
+
+.foot-line{ text-align:center; margin-top:var(--space-xl); font-size:var(--font-size-md); color: var(--text-muted); }
+.foot-line a{ font-weight:800; color: var(--violet-dark); }
+
+.tag-input{ display:flex; flex-wrap:wrap; gap:var(--space-sm); padding:var(--space-sm) var(--space-md); border-radius:var(--theme-radius); border:1.5px solid var(--paper-3); background:var(--color-card-bg); }
+.tag-input:focus-within{ border-color: var(--violet); box-shadow:0 0 0 4px rgba(var(--color-primary-rgb),0.12); }
+.tag-chip{ display:flex; align-items:center; gap:6px; background: var(--violet-light); padding:5px 10px; border-radius:999px; font-size:12px; font-family: var(--font-mono); color: var(--violet-dark); font-weight:700; }
+.tag-chip button{ color: var(--violet-dark); opacity:.6; font-size:13px; line-height:1; }
+.tag-input input{ border:none; flex:1; min-width:120px; padding:5px; font-size:13px; }
+.tag-input input:focus{ outline:none; }
+.hint{ font-size:11.5px; color: var(--text-faint); margin-top:7px; }
+
+.otp-row{ display:flex; gap:10px; margin-bottom:6px; }
+.otp-box{ width:52px; height:58px; text-align:center; font-family: var(--font-mono); font-size:21px; font-weight:700; border-radius:var(--theme-radius); border:1.5px solid var(--paper-3); background:var(--color-card-bg); color: var(--text-dark); }
+.otp-box:focus{ outline:none; border-color: var(--violet); box-shadow:0 0 0 4px rgba(var(--color-primary-rgb),0.12); }
+.otp-meta{ display:flex; justify-content:space-between; align-items:center; margin:18px 0 26px; }
+.otp-meta .timer{ font-family: var(--font-mono); font-size:12.5px; color: var(--text-faint); }
+.otp-meta .resend{ font-size:13px; font-weight:800; color: var(--violet-dark); }
+.otp-meta .resend[disabled]{ color: var(--text-faint); cursor:default; }
+
+.strength{ display:flex; gap:5px; margin-top:9px; }
+.strength div{ height:4px; flex:1; border-radius:3px; background: var(--paper-3); transition: background .25s; }
+.strength-label{ font-size:11.5px; color: var(--text-faint); margin-top:7px; font-family: var(--font-mono); }
+
+.badge-icon-circle{ width:60px; height:60px; border-radius:var(--theme-radius); background: var(--violet-light); display:flex; align-items:center; justify-content:center; margin-bottom:22px; }
+
+/* ===== profile / dashboard ===== */
+.profile-wrap{ max-width:900px; margin:0 auto; padding:0 48px 80px; }
+.profile-card{ background:var(--color-card-bg); border:1px solid var(--paper-3); border-radius: var(--radius); overflow:hidden; margin-bottom:24px; }
+.profile-banner{ height:120px; background: linear-gradient(120deg, var(--violet), var(--ink-3) 60%, var(--coral)); position:relative; }
+.profile-top{ padding:0 var(--space-2xl) var(--space-2xl); position:relative; }
+.avatar-wrap{ position:relative; width:112px; margin-top:-56px; margin-bottom:14px; }
+.avatar-circle{ width:112px; height:112px; border-radius:50%; border:5px solid var(--color-card-bg); background: var(--violet); display:flex; align-items:center; justify-content:center; overflow:hidden; box-shadow:0 6px 18px rgba(var(--color-bg-dark-rgb),0.18); }
+.avatar-circle img{ width:100%; height:100%; object-fit:cover; }
+.avatar-initials{ font-family: var(--font-display); font-weight:800; font-size:36px; color:var(--color-card-bg); }
+.avatar-edit-btn{ position:absolute; bottom:2px; right:2px; width:32px; height:32px; border-radius:50%; background: var(--ink); border:3px solid var(--color-card-bg); display:flex; align-items:center; justify-content:center; }
+.avatar-edit-btn:hover{ background: var(--violet-dark); }
+.avatar-edit-btn[aria-busy="true"]{ cursor:wait; }
+.avatar-edit-btn[aria-busy="true"] svg{ display:none; }
+.avatar-edit-btn[aria-busy="true"]::after{ content:""; color:var(--color-card-bg); }
+.avatar-edit-btn input[type=file]{ display:none; }
+.profile-name-row{ display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap; }
+.profile-name-row h2{ font-family: var(--font-display); font-size:var(--font-size-h2); font-weight:800; letter-spacing:-0.01em; margin-bottom:4px; }
+.profile-name-row .p-email{ color: var(--text-muted); font-size:14px; margin-bottom:10px; }
+.profile-headline{ font-size:14.5px; color: var(--text-dark); max-width:520px; line-height:1.55; }
+.profile-headline.editable{ border:1.5px dashed var(--paper-3); border-radius:var(--theme-radius); padding:var(--space-sm) var(--space-md); outline:none; }
+.profile-headline.editable:focus{ border-color: var(--violet); }
+.profile-headline-counter{ margin-top:5px; color:var(--text-faint); font-size:11px; text-align:right; }
+.profile-headline-counter.at-limit{ color:var(--color-error); font-weight:700; }
+.stats-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-lg); margin:20px 0 4px; }
+.stat-box{ background:var(--card-bg); border:var(--card-border); border-radius:var(--card-radius); padding:var(--card-padding); box-shadow:var(--card-shadow); }
+.stat-box b{ font-family: var(--font-display); font-size:22px; display:block; }
+.stat-box span{ font-size:12px; color: var(--text-faint); }
+.profile-badges{ margin-top:18px; }
+.profile-badges h3{ font-family:var(--font-display); font-size:var(--font-size-h3); margin-bottom:8px; }
+.profile-badge-list{ display:flex; flex-wrap:wrap; gap:var(--space-sm); }
+.profile-badge-chip{ display:inline-flex; align-items:center; gap:6px; background:var(--card-bg); border:var(--card-border); border-radius:var(--card-radius); padding:var(--card-padding); box-shadow:var(--card-shadow); color:var(--text-dark); font-size:12px; font-weight:700; }
+.profile-badge-icon{ font-size:15px; }
+.profile-badges-empty{ color:var(--text-faint); font-size:12px; }
+.profile-ratings{ margin-top:18px; }
+.profile-ratings h3{ font-family:var(--font-display); font-size:var(--font-size-h3); margin-bottom:4px; }
+.profile-ratings-list{ display:grid; }
+.profile-rating-entry{ padding:11px 0; border-bottom:1px solid var(--paper-3); }
+.profile-rating-entry:last-child{ border-bottom:0; }
+.profile-rating-head{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.profile-rating-head strong{ font-size:12px; }
+.profile-rating-score{ color:var(--color-warning); font-size:12px; font-weight:800; white-space:nowrap; }
+.profile-rating-entry p{ margin-top:4px; color:var(--text-muted); font-size:12px; line-height:1.45; overflow-wrap:anywhere; }
+.profile-rating-entry time{ display:block; margin-top:5px; color:var(--text-faint); font-size:10px; }
+.peer-badge-icons{ display:inline-flex; align-items:center; gap:3px; margin-left:6px; font-size:12px; vertical-align:middle; }
+.peer-badge-icons[hidden]{ display:none; }
+
+.skills-section{ background:var(--color-card-bg); border:1px solid var(--paper-3); border-radius: var(--radius); padding:var(--space-xl) var(--space-2xl); margin-bottom:20px; }
+.skills-section h3{ font-family: var(--font-display); font-size:var(--font-size-h3); font-weight:800; margin-bottom:4px; display:flex; align-items:center; gap:9px; }
+.skills-section h3 .dot-teach{ width:9px; height:9px; border-radius:50%; background: var(--cyan); }
+.skills-section h3 .dot-learn{ width:9px; height:9px; border-radius:50%; background: var(--coral); }
+.skills-section p.desc{ font-size:var(--font-size-md); color: var(--text-faint); margin-bottom:var(--space-lg); }
+.skill-chip-teach{ background: var(--color-accent-soft); color: var(--cyan-dark); }
+.skill-chip-learn{ background: var(--color-error-soft); color: var(--color-error); }
+
+.profile-actions{ display:flex; gap:var(--space-md); margin-top:var(--space-sm); }
+.profile-actions .btn{ padding:var(--space-sm) var(--space-xl); font-size:var(--font-size-md); }
+.save-note{ font-size:var(--font-size-sm); color: var(--cyan-dark); font-weight:700; margin-left:var(--space-xs); display:inline-flex; align-items:center; gap:var(--space-xs); opacity:0; transition:.25s; }
+.save-note.show{ opacity:1; }
+.leaderboard-section{ background:var(--color-card-bg); border:1px solid var(--paper-3); border-radius:var(--radius); padding:var(--space-xl); margin:0 0 24px; }
+.leaderboard-heading{ display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:8px; }
+.leaderboard-heading h3{ font-family:var(--font-display); font-size:var(--font-size-h3); font-weight:800; }
+.leaderboard-heading p,.leaderboard-status{ color:var(--text-muted); font-size:12px; }
+.leaderboard-rank{ width:max-content; margin:var(--space-md) 0; background:var(--card-bg); border:var(--card-border); border-radius:var(--card-radius); padding:var(--card-padding); box-shadow:var(--card-shadow); font-size:var(--font-size-md); font-weight:800; }
+.leaderboard-table-wrap{ overflow-x:auto; }
+.leaderboard-table{ width:100%; min-width:700px; border-collapse:separate; border-spacing:0 var(--space-sm); text-align:left; }
+.leaderboard-table thead th{ padding:var(--card-padding); border-bottom:1px solid var(--paper-3); color:var(--text-faint); font-family:var(--font-mono); font-size:10px; font-weight:700; text-transform:uppercase; }
+.leaderboard-table tbody td{ background:var(--card-bg); border-top:var(--card-border); border-bottom:var(--card-border); padding:var(--card-padding); box-shadow:var(--card-shadow); font-size:12px; vertical-align:middle; }
+.leaderboard-table tbody td:first-child{ border-left:var(--card-border); border-radius:var(--card-radius) 0 0 var(--card-radius); }
+.leaderboard-table tbody td:last-child{ border-right:var(--card-border); border-radius:0 var(--card-radius) var(--card-radius) 0; }
+.leaderboard-table tbody td:first-child:last-child{ border-radius:var(--card-radius); }
+.leaderboard-table tbody tr.is-current-user td{ background:var(--color-accent-soft); }
+.leaderboard-table tbody tr.is-current-user td:first-child{ box-shadow:inset 3px 0 var(--cyan-dark), var(--card-shadow); }
+.leaderboard-rank-cell{ width:56px; font-family:var(--font-mono); font-weight:700; white-space:nowrap; }
+.leaderboard-medal{ font-size:19px; }
+.leaderboard-name{ display:block; font-weight:800; color:var(--text-dark); }
+.leaderboard-headline{ display:block; max-width:260px; margin-top:3px; color:var(--text-muted); overflow-wrap:anywhere; }
+.leaderboard-stars{ color:var(--color-warning); white-space:nowrap; }
+.leaderboard-badges{ display:flex; align-items:center; gap:5px; white-space:nowrap; }
+.leaderboard-badge-icon{ font-size:16px; }
+.leaderboard-badge-count{ color:var(--text-muted); font-size:11px; }
+.leaderboard-status.error{ color:var(--color-error); }
+.dashboard-connections{ display:grid; grid-template-columns:minmax(0,1.05fr) minmax(280px,.95fr); gap:var(--space-xl); align-items:start; margin-bottom:var(--space-xl); }
+.matches-panel h3,.swap-requests-panel h3{ font-family:var(--font-display); font-size:var(--font-size-h3); font-weight:800; margin:0 0 12px; }
+.dashboard-peer-graph{ aspect-ratio:1.08; border-radius:var(--radius); box-shadow:none; }
+.swap-requests-panel{ background:var(--color-card-bg); border:1px solid var(--paper-3); border-radius:var(--radius); padding:var(--space-xl); }
+.messages-panel{ background:var(--color-card-bg); border:1px solid var(--paper-3); border-radius:var(--radius); padding:var(--space-xl); margin-bottom:24px; }
+.messages-panel h3{ font-family:var(--font-display); font-size:var(--font-size-h3); font-weight:800; margin:0 0 4px; }
+.messages-status{ min-height:18px; margin:0 0 14px; color:var(--text-muted); font-size:12px; }
+.message-nav-count{ display:inline-flex; align-items:center; justify-content:center; min-width:19px; height:19px; padding:0 var(--space-xs); border-radius:var(--theme-radius); background:var(--coral); color:var(--color-card-bg); font-size:10px; font-weight:800; }
+.message-nav-count[hidden]{ display:none; }
+.notification-nav-count{ display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:50%; background:var(--coral); color:var(--color-card-bg); font-size:10px; font-weight:800; line-height:1; }
+.notification-nav-count[hidden]{ display:none; }
+.messages-layout{ display:grid; grid-template-columns:minmax(180px,.34fr) minmax(0,.66fr); gap:var(--space-lg); min-height:360px; }
+.message-conversation-list{ display:flex; flex-direction:column; gap:var(--space-xs); max-height:420px; overflow-y:auto; }
+.message-peer-button{ display:flex; align-items:flex-start; justify-content:space-between; gap:var(--space-md); width:100%; padding:var(--space-md) var(--space-sm); border-bottom:1px solid var(--paper-3); color:var(--text-dark); text-align:left; }
+.message-peer-button:hover,.message-peer-button.active{ background:var(--paper-2); }
+.message-peer-copy{ min-width:0; display:grid; gap:4px; }
+.message-peer-copy strong{ font-size:13px; }
+.message-peer-copy span{ overflow:hidden; color:var(--text-muted); font-size:11px; text-overflow:ellipsis; white-space:nowrap; }
+.message-unread-count{ flex:none; min-width:20px; padding:2px 6px; border-radius:var(--theme-radius); background:var(--cyan); color:var(--ink); font-size:10px; font-weight:800; text-align:center; }
+.message-thread{ display:flex; min-width:0; flex-direction:column; border:1px solid var(--paper-3); border-radius:var(--theme-radius); overflow:hidden; }
+.message-thread-header{ padding:var(--space-sm) var(--space-md); border-bottom:1px solid var(--paper-3); }
+.message-thread-header strong{ font-size:13px; }
+.message-log{ display:flex; min-height:190px; max-height:340px; flex:1; flex-direction:column; gap:var(--space-md); overflow-y:auto; padding:var(--space-md); background:var(--paper); }
+.message-row{ display:flex; flex-direction:column; align-items:flex-start; gap:3px; max-width:88%; }
+.message-row.outgoing{ align-self:flex-end; align-items:flex-end; }
+.message-bubble{ background:var(--card-bg); border:var(--card-border); border-radius:var(--card-radius); padding:var(--card-padding); box-shadow:var(--card-shadow); color:var(--text-dark); font-size:var(--font-size-md); line-height:1.45; overflow-wrap:anywhere; white-space:pre-wrap; }
+.message-row.outgoing .message-bubble{ background:var(--ink-2); border-color:var(--ink-3); color:var(--color-card-bg); }
+.message-time{ color:var(--text-faint); font-size:10px; }
+.message-composer{ display:flex; align-items:flex-end; gap:var(--space-sm); padding:var(--space-sm); border-top:1px solid var(--paper-3); }
+.message-composer-field{ min-width:0; flex:1; display:flex; flex-direction:column; gap:4px; }
+.message-composer input{ width:100%; min-width:0; border:1px solid var(--paper-3); border-radius:var(--theme-radius); padding:var(--space-md); color:var(--text-dark); }
+.message-composer-counter{ color:var(--text-faint); font-size:10px; text-align:right; }
+.message-composer input:focus{ outline:2px solid rgba(var(--color-primary-rgb),.2); border-color:var(--violet); }
+.message-composer .btn{ padding:9px 14px; }
+.message-composer .btn:disabled,.message-composer input:disabled{ opacity:.55; cursor:not-allowed; }
+.request-feedback{ min-height:20px; margin:0 0 var(--space-sm); font-size:var(--font-size-md); color:var(--text-muted); }
+.request-feedback.success{ color:var(--cyan-dark); font-weight:700; }
+.request-feedback.error{ color:var(--color-error); font-weight:700; }
+.received-request{ display:flex; flex-direction:column; align-items:flex-start; gap:var(--space-sm); background:var(--card-bg); border:var(--card-border); border-radius:var(--card-radius); padding:var(--card-padding); box-shadow:var(--card-shadow); }
+.received-request p{ margin:0; font-size:var(--font-size-md); line-height:1.45; }
+.received-request strong{ color:var(--text-dark); }
+.request-list{ display:flex; flex-direction:column; gap:var(--space-sm); }
+.request-actions{ display:flex; flex-wrap:wrap; gap:var(--space-sm); }
+.request-actions .btn{ padding:7px var(--space-md); font-size:var(--font-size-sm); }
+.request-section-title{ margin:var(--space-lg) 0 var(--space-xs); font-family:var(--font-mono); font-size:var(--font-size-xs); font-weight:700; text-transform:uppercase; color:var(--text-faint); }
+.swap-dialog{ width:min(420px,calc(100vw - 32px)); }
+.swap-dialog .swap-skill-verification{ margin:calc(var(--space-sm) * -1) 0 var(--space-lg); color:var(--text-muted); font-weight:700; }
+.swap-dialog .swap-skill-verification.verified{ color:var(--color-success); }
+.swap-dialog label{ display:block; font-size:var(--font-size-sm); font-weight:700; margin-bottom:var(--space-sm); }
+.swap-dialog input,.swap-dialog textarea{ width:100%; border:1px solid var(--paper-3); border-radius:var(--theme-radius); padding:var(--space-md); color:var(--text-dark); background:var(--paper-2); }
+.swap-dialog textarea{ min-height:88px; resize:vertical; }
+
+.tag-chip .skill-verify-button{ padding:3px 7px; border:1px solid currentColor; border-radius:var(--theme-radius); color:var(--violet-dark); font-size:10px; line-height:1.2; opacity:1; }
+.tag-chip .skill-verify-button:hover{ background:var(--violet-light); }
+.skill-verified-badge{ display:inline-flex; align-items:center; gap:3px; padding:3px 7px; border-radius:var(--theme-radius); background:var(--color-success-soft); color:var(--color-success); font-family:var(--font-body); font-size:10px; font-weight:800; white-space:nowrap; }
+.tag-chip .tag-remove{ color:inherit; opacity:.65; font-size:var(--font-size-md); line-height:1; }
+.skill-quiz-dialog{ width:min(700px,calc(100vw - 32px)); height:min(760px,calc(100vh - 32px)); max-height:calc(100vh - 32px); padding:var(--space-xl); }
+.skill-quiz-dialog[open]{ display:flex; flex-direction:column; }
+.skill-chat-heading{ display:flex; align-items:flex-start; justify-content:space-between; gap:var(--space-lg); }
+.skill-chat-heading h2{ margin-bottom:var(--space-sm); }
+.skill-chat-close{ color:var(--text-muted); font-size:23px; line-height:1; padding:2px 6px; }
+.skill-chat-close:hover{ color:var(--text-dark); }
+.skill-quiz-status{ min-height:18px; margin:0 0 var(--space-md)!important; font-size:var(--font-size-sm)!important; color:var(--text-muted); }
+.skill-quiz-status.error{ color:var(--color-error); font-weight:700; }
+.skill-quiz-form{ flex:1; min-height:0; display:flex; flex-direction:column; }
+.skill-quiz-form[hidden]{ display:none; }
+.skill-quiz-questions{ flex:1; overflow-y:auto; padding:2px var(--space-sm) var(--space-md) 2px; }
+.skill-quiz-question{ border:0; border-bottom:1px solid var(--paper-3); padding:var(--space-md) 0; }
+.skill-quiz-question legend{ width:100%; margin-bottom:var(--space-md); font-size:var(--font-size-lg); font-weight:800; line-height:1.5; }
+.skill-quiz-option{ display:flex; align-items:flex-start; gap:var(--space-sm); padding:var(--space-sm) var(--space-md); border-radius:var(--theme-radius); color:var(--text-muted); font-size:var(--font-size-md); line-height:1.45; cursor:pointer; }
+.skill-quiz-option:hover{ background:var(--paper-2); }
+.skill-quiz-option input{ margin-top:3px; accent-color:var(--violet); }
+.skill-quiz-submit{ align-self:flex-end; margin-top:var(--space-md); }
+.skill-chat-result{ margin:var(--space-md) 0 0!important; padding:var(--space-md); border-radius:var(--theme-radius); background:var(--color-error-soft); color:var(--color-error)!important; font-size:var(--font-size-md)!important; line-height:1.5; }
+.skill-chat-result.pass{ background:var(--color-success-soft); color:var(--color-success)!important; }
+.skill-chat-result[hidden]{ display:none; }
+
+@media (max-width:640px){
+  .profile-wrap{ padding:0 20px 60px; }
+  #page-dashboard .nav{ flex-wrap:wrap; gap:12px; }
+  #page-dashboard .nav-cta{ width:100%; flex-wrap:wrap; justify-content:flex-start; gap:6px; }
+  #page-dashboard .nav-cta .btn{ padding:8px 10px; font-size:11px; }
+  .leaderboard-section{ padding:18px 14px; }
+  .leaderboard-heading{ align-items:flex-start; }
+  .stats-row{ grid-template-columns:1fr; }
+  .messages-layout{ grid-template-columns:1fr; }
+  .message-conversation-list{ max-height:180px; }
+}
+
+@media (max-width:920px){
+  .hero{ grid-template-columns:1fr; padding-top:86px; }
+  .steps{ grid-template-columns:1fr; }
+  .features{ grid-template-columns:1fr 1fr; }
+  .cta-band{ flex-direction:column; text-align:center; padding:46px 30px; }
+  .auth-shell{ grid-template-columns:1fr; }
+  .auth-side{ display:none; }
+  .nav-links{ display:none; }
+  .dashboard-connections{ grid-template-columns:1fr; }
+}
+@media (max-width:560px){
+  .features{ grid-template-columns:1fr; }
+  .nav{ padding:18px 20px; }
+  .hero{ padding:86px 20px 20px; }
+  .hero h1{ font-size:var(--font-size-h1); }
+  .section{ padding:56px 20px; }
+  .otp-box{ width:44px; height:52px; font-size:18px; }
+}
+</style>
+</head>
+<body>
+
+<!-- reusable logo mark svg is inlined at every usage since this is static HTML -->
+
+<!-- ============ LANDING ============ -->
+<section class="page active" id="page-landing">
+  <nav class="nav">
+    <div class="brand">
+      <span class="logo-mark">
+        <svg viewBox="0 0 40 40" fill="none"><circle cx="13" cy="13" r="7.5" fill="var(--color-accent)"/><circle cx="27" cy="27" r="7.5" fill="var(--color-error)"/><path d="M13 13L27 27" stroke="var(--color-background)" stroke-width="2.4" stroke-linecap="round"/><path d="M13 27L27 13" stroke="var(--color-background)" stroke-width="2.4" stroke-linecap="round" opacity="0.35"/><circle cx="20" cy="20" r="3" fill="var(--color-background)"/></svg>
+      </span>
+      <span class="wordmark"><span class="wm-ptp">PTP</span><span class="wm-rest">skill<span class="wm-x">X</span>change</span></span>
+    </div>
+    <div class="nav-links">
+      <a href="#howitworks">How it works</a>
+      <a href="#features">Why us</a>
+      <a href="#community">Community</a>
+    </div>
+    <div class="nav-cta">
+      <button class="btn btn-secondary" onclick="showPage('login')">Log in</button>
+      <button class="btn btn-primary" onclick="showPage('register')">Join free</button>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <div>
+      <div class="eyebrow"><span class="dot"></span> Peer-to-peer · AI matched · 8,900 peers online</div>
+      <h1>Learn from a peer.<br>Teach one <span class="accent-x">back</span>.</h1>
+      <p class="lead">PTPskillXchange connects you directly with someone who has what you want to learn — and wants what you already know. No instructors, no course fees, no algorithmic feed. Just people, matched.</p>
+      <div class="hero-actions">
+        <button class="btn btn-accent btn-lg" onclick="showPage('register')">Find your first peer</button>
+        <button class="btn btn-secondary btn-lg" onclick="showPage('login')">I have an account</button>
+      </div>
+    </div>
+
+    <div class="network-card">
+      <svg id="peerGraphSvg" viewBox="0 0 380 350" fill="none" role="img" aria-label="Matched peer graph">
+      </svg>
+      <p class="network-message" id="peerGraphMessage" role="status">Log in to see matched peers.</p>
+    </div>
+  </div>
+
+  <div class="section" id="howitworks">
+    <div class="section-head">
+      <span class="tag">The process</span>
+      <h2>Three steps to your first swap</h2>
+      <p>No cash changes hands, no instructor stands between you. You bring a skill, our engine finds your peer, and you both leave knowing more.</p>
+    </div>
+    <div class="steps">
+      <div class="step-card">
+        <span class="step-code">01 / CREATE PROFILE</span>
+        <h3>List what you know</h3>
+        <p>Add the skills you can teach and the ones you're chasing. Set your pace and preferred format — video calls, async, or in person.</p>
+      </div>
+      <div class="step-card">
+        <span class="step-code">02 / GET MATCHED</span>
+        <h3>Meet your AI-ranked peers</h3>
+        <p>Our engine scores compatibility on skill level, availability, and teaching style — not just who's nearby.</p>
+      </div>
+      <div class="step-card">
+        <span class="step-code">03 / CONNECT DIRECTLY</span>
+        <h3>Swap and grow</h3>
+        <p>Message peer-to-peer, schedule sessions, and rate each other. Your reputation score unlocks stronger matches.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="features">
+    <div class="section-head">
+      <span class="tag">Why PTPskillXchange</span>
+      <h2>Built for direct connection</h2>
+      <p>No middleman, no course catalog to browse — just a real network of peers who teach and learn from each other.</p>
+    </div>
+    <div class="features">
+      <div class="feature-card">
+        <div class="feature-ico"><svg viewBox="0 0 24 24" fill="none" width="19" height="19"><circle cx="8" cy="8" r="3" stroke="var(--color-accent)" stroke-width="1.6"/><circle cx="17" cy="17" r="3" stroke="var(--color-error)" stroke-width="1.6"/><path d="M10.2 10.2L14.8 14.8" stroke="var(--color-card-bg)" stroke-width="1.6"/></svg></div>
+        <h4>Direct peer link</h4>
+        <p>Message and meet your match directly — no ticketing system, no support queue.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico"><svg viewBox="0 0 24 24" fill="none" width="19" height="19"><circle cx="12" cy="12" r="3.2" stroke="var(--color-accent)" stroke-width="1.6"/><path d="M12 3V6M12 18V21M3 12H6M18 12H21" stroke="var(--color-accent)" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+        <h4>AI compatibility</h4>
+        <p>Ranked matches on level, goals, and real availability — refreshed as your profile grows.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico"><svg viewBox="0 0 24 24" fill="none" width="19" height="19"><path d="M12 3L4 7V12C4 16.4 7.4 20.4 12 21C16.6 20.4 20 16.4 20 12V7L12 3Z" stroke="var(--color-accent)" stroke-width="1.6"/></svg></div>
+        <h4>Peer verified</h4>
+        <p>Skills are backed by endorsements from peers you've actually swapped with.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-ico"><svg viewBox="0 0 24 24" fill="none" width="19" height="19"><path d="M12 17.3L6.2 20.6l1.1-6.5L2.6 9.4l6.5-1L12 2.5l2.9 5.9 6.5 1-4.7 4.7 1.1 6.5z" stroke="var(--color-accent)" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
+        <h4>Two-way rating</h4>
+        <p>Every swap builds a portable reputation score that opens stronger matches.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-band" id="community">
+    <div>
+      <h2>Your next skill is one peer away.</h2>
+      <p>Join 8,900 people learning and teaching directly — no classroom required.</p>
+    </div>
+    <button class="btn btn-accent btn-lg" onclick="showPage('register')">Create free account</button>
+  </div>
+
+  <div class="footer">
+    <div class="brand" style="font-size:15px;">
+      <span class="logo-mark" style="width:26px;height:26px;border-radius:var(--theme-radius);"><svg viewBox="0 0 40 40" fill="none" style="width:15px;height:15px;"><circle cx="13" cy="13" r="7.5" fill="var(--color-accent)"/><circle cx="27" cy="27" r="7.5" fill="var(--color-error)"/><path d="M13 13L27 27" stroke="var(--color-background)" stroke-width="2.6" stroke-linecap="round"/></svg></span>
+      <span class="wordmark" style="font-size:15px;"><span class="wm-ptp">PTP</span><span class="wm-rest">skill<span class="wm-x">X</span>change</span></span>
+    </div>
+    <span>© 2026 PTPskillXchange · Learn peer to peer</span>
+  </div>
+</section>
+
+<!-- ============ LOGIN ============ -->
+<section class="page" id="page-login">
+  <div class="auth-shell">
+    <aside class="auth-side">
+      <div>
+        <div class="brand on-dark">
+          <span class="logo-mark"><svg viewBox="0 0 40 40" fill="none"><circle cx="13" cy="13" r="7.5" fill="var(--color-accent)"/><circle cx="27" cy="27" r="7.5" fill="var(--color-error)"/><path d="M13 13L27 27" stroke="var(--color-background)" stroke-width="2.4" stroke-linecap="round"/><circle cx="20" cy="20" r="3" fill="var(--color-background)"/></svg></span>
+          <span class="wordmark"><span class="wm-ptp">PTP</span><span class="wm-rest">skill<span class="wm-x">X</span>change</span></span>
+        </div>
+        <div class="auth-copy">
+          <h2>Welcome back to the network.</h2>
+          <p>Pick up your conversations, message your matches, and keep swapping skills peer to peer.</p>
+        </div>
+        <div class="peer-graph">
+          <svg viewBox="0 0 340 210" fill="none">
+            <line x1="170" y1="100" x2="60" y2="40" stroke="var(--color-bg-dark-raised)" stroke-width="1.4"/>
+            <line x1="170" y1="100" x2="280" y2="45" stroke="var(--color-accent)" stroke-width="2" stroke-dasharray="4 5"/>
+            <line x1="170" y1="100" x2="55" y2="165" stroke="var(--color-bg-dark-raised)" stroke-width="1.4"/>
+            <line x1="170" y1="100" x2="270" y2="170" stroke="var(--color-bg-dark-raised)" stroke-width="1.4"/>
+            <circle cx="170" cy="100" r="20" fill="var(--color-primary)"/>
+            <text x="170" y="104" text-anchor="middle" class="node-tag" fill="var(--color-card-bg)" style="font-size:8px">YOU</text>
+            <circle cx="60" cy="40" r="14" fill="var(--color-bg-dark-elevated)" stroke="var(--color-bg-dark-raised)"/>
+            <text x="60" y="66" text-anchor="middle" class="node-label">Priya</text>
+            <circle cx="280" cy="45" r="16" fill="var(--color-accent)"/>
+            <text x="280" y="72" text-anchor="middle" class="node-label" fill="var(--color-accent)">Tom · live</text>
+            <circle cx="55" cy="165" r="14" fill="var(--color-bg-dark-elevated)" stroke="var(--color-bg-dark-raised)"/>
+            <text x="55" y="190" text-anchor="middle" class="node-label">Zoe</text>
+            <circle cx="270" cy="170" r="14" fill="var(--color-bg-dark-elevated)" stroke="var(--color-bg-dark-raised)"/>
+            <text x="270" y="195" text-anchor="middle" class="node-label">Sam</text>
+          </svg>
+        </div>
+      </div>
+      <div class="auth-side-foot">
+        <div class="dots"><div style="background:var(--color-accent)"></div><div style="background:var(--color-error)"></div><div style="background:var(--color-primary)"></div></div>
+        Trusted by 8,900+ peers worldwide
+      </div>
+    </aside>
+
+    <main class="auth-main">
+      <div class="auth-box">
+        <a class="top-link" onclick="showPage('landing')">← Back to home</a>
+        <h1>Log in to your account</h1>
+        <p class="sub">New here? <b>Get matched with your first peer in minutes.</b></p>
+
+        <form onsubmit="return false;">
+          <div class="field">
+            <label for="loginEmail">Email address</label>
+            <div class="input-wrap"><input type="email" id="loginEmail" placeholder="you@example.com" autocomplete="email" aria-describedby="loginEmailError" required/></div>
+            <p class="field-error" id="loginEmailError" role="alert" hidden></p>
+          </div>
+          <div class="field">
+            <label for="loginPw">Password <a class="fp" onclick="showPage('forgot')">Forgot password?</a></label>
+            <div class="input-wrap has-icon">
+              <input type="password" id="loginPw" placeholder="Enter your password" autocomplete="current-password" aria-describedby="loginPwError" required/>
+              <span class="toggle-eye" onclick="toggleEye('loginPw')"><svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M2 12C4 7 8 4.5 12 4.5S20 7 22 12C20 17 16 19.5 12 19.5S4 17 2 12Z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/></svg></span>
+            </div>
+            <p class="field-error" id="loginPwError" role="alert" hidden></p>
+          </div>
+          <div class="checkbox-row">
+            <input type="checkbox" id="remember"/>
+            <label for="remember">Keep me logged in</label>
+          </div>
+          <button class="btn btn-primary btn-block btn-lg" id="loginSubmitButton" onclick="handleLogin()">Log in</button>
+        </form>
+
+        <div class="divider"><span class="line"></span><span>OR CONTINUE WITH</span><span class="line"></span></div>
+        <div class="social-row">
+          <button class="btn btn-secondary social-btn"><svg viewBox="0 0 24 24" width="16" height="16"><path fill="#EA4335" d="M12 10.2v3.9h5.5c-.24 1.4-1.7 4.1-5.5 4.1-3.3 0-6-2.7-6-6.2s2.7-6.2 6-6.2c1.9 0 3.1.8 3.8 1.5l2.6-2.5C16.8 3.2 14.6 2.2 12 2.2 6.9 2.2 2.7 6.4 2.7 12S6.9 21.8 12 21.8c6.9 0 8.3-6.4 7.7-9.6H12z"/></svg> Google</button>
+          <button class="btn btn-secondary social-btn"><svg viewBox="0 0 24 24" width="16" height="16" fill="var(--color-text-dark)"><path d="M12 2C6.5 2 2 6.6 2 12.2c0 4.5 2.9 8.3 6.8 9.6.5.1.7-.2.7-.5v-1.8c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1.1 1.5 1.1.9 1.5 2.3 1.1 2.9.8.1-.7.4-1.1.6-1.4-2.2-.2-4.6-1.1-4.6-5 0-1.1.4-2 1.1-2.7-.1-.3-.5-1.4.1-2.9 0 0 .9-.3 2.9 1.1a10 10 0 015.3 0c2-1.4 2.9-1.1 2.9-1.1.6 1.5.2 2.6.1 2.9.7.7 1.1 1.6 1.1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7 1 .7 2v2.9c0 .3.2.6.7.5 4-1.3 6.8-5.1 6.8-9.6C22 6.6 17.5 2 12 2z"/></svg> GitHub</button>
+        </div>
+        <p class="foot-line">Don't have an account? <a onclick="showPage('register')">Sign up free</a></p>
+      </div>
+    </main>
+  </div>
+</section>
+
+<!-- ============ REGISTER ============ -->
+<section class="page" id="page-register">
+  <div class="auth-shell">
+    <aside class="auth-side">
+      <div>
+        <div class="brand on-dark">
+          <span class="logo-mark"><svg viewBox="0 0 40 40" fill="none"><circle cx="13" cy="13" r="7.5" fill="var(--color-accent)"/><circle cx="27" cy="27" r="7.5" fill="var(--color-error)"/><path d="M13 13L27 27" stroke="var(--color-background)" stroke-width="2.4" stroke-linecap="round"/><circle cx="20" cy="20" r="3" fill="var(--color-background)"/></svg></span>
+          <span class="wordmark"><span class="wm-ptp">PTP</span><span class="wm-rest">skill<span class="wm-x">X</span>change</span></span>
+        </div>
+        <div class="auth-copy">
+          <h2>Bring one skill. Leave with another.</h2>
+          <p>Tell us what you can teach — matching starts finding your peers the moment you sign up.</p>
+        </div>
+        <div class="peer-graph">
+          <svg viewBox="0 0 340 210" fill="none">
+            <line x1="170" y1="100" x2="60" y2="40" stroke="var(--color-bg-dark-raised)" stroke-width="1.4"/>
+            <line x1="170" y1="100" x2="280" y2="45" stroke="var(--color-bg-dark-raised)" stroke-width="1.4"/>
+            <line x1="170" y1="100" x2="55" y2="165" stroke="var(--color-error)" stroke-width="2" stroke-dasharray="4 5"/>
+            <line x1="170" y1="100" x2="270" y2="170" stroke="var(--color-bg-dark-raised)" stroke-width="1.4"/>
+            <circle cx="170" cy="100" r="20" fill="var(--color-primary)"/>
+            <text x="170" y="104" text-anchor="middle" class="node-tag" fill="var(--color-card-bg)" style="font-size:8px">YOU</text>
+            <circle cx="60" cy="40" r="14" fill="var(--color-bg-dark-elevated)" stroke="var(--color-bg-dark-raised)"/>
+            <text x="60" y="66" text-anchor="middle" class="node-label">UX Design</text>
+            <circle cx="280" cy="45" r="14" fill="var(--color-bg-dark-elevated)" stroke="var(--color-bg-dark-raised)"/>
+            <text x="280" y="70" text-anchor="middle" class="node-label">Video Edit</text>
+            <circle cx="55" cy="165" r="16" fill="var(--color-error)"/>
+            <text x="55" y="192" text-anchor="middle" class="node-label" fill="var(--color-error)">Spanish · hot</text>
+            <circle cx="270" cy="170" r="14" fill="var(--color-bg-dark-elevated)" stroke="var(--color-bg-dark-raised)"/>
+            <text x="270" y="195" text-anchor="middle" class="node-label">Guitar</text>
+          </svg>
+        </div>
+      </div>
+      <div class="auth-side-foot">
+        <div class="dots"><div style="background:var(--color-accent)"></div><div style="background:var(--color-error)"></div><div style="background:var(--color-primary)"></div></div>
+        Free forever for your first 3 swaps
+      </div>
+    </aside>
+
+    <main class="auth-main">
+      <div class="auth-box">
+        <a class="top-link" onclick="showPage('landing')">← Back to home</a>
+        <h1>Create your account</h1>
+        <p class="sub">Takes about 2 minutes. No payment info needed.</p>
+
+        <form onsubmit="return false;">
+          <div class="field">
+            <label for="regName">Full name</label>
+            <div class="input-wrap"><input type="text" id="regName" placeholder="Your name" autocomplete="name" aria-describedby="regNameError" required/></div>
+            <p class="field-error" id="regNameError" role="alert" hidden></p>
+          </div>
+          <div class="field">
+            <label for="regEmail">Email address</label>
+            <div class="input-wrap"><input type="email" id="regEmail" placeholder="you@example.com" autocomplete="email" aria-describedby="regEmailError" required/></div>
+            <p class="field-error" id="regEmailError" role="alert" hidden></p>
+          </div>
+          <div class="field">
+            <label for="regPw">Password</label>
+            <div class="input-wrap has-icon">
+              <input type="password" id="regPw" placeholder="At least 6 characters" autocomplete="new-password" minlength="6" aria-describedby="regPwHint regPwError" required/>
+              <span class="toggle-eye" onclick="toggleEye('regPw')"><svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M2 12C4 7 8 4.5 12 4.5S20 7 22 12C20 17 16 19.5 12 19.5S4 17 2 12Z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/></svg></span>
+            </div>
+            <p class="hint" id="regPwHint">At least 6 characters</p>
+            <p class="field-error" id="regPwError" role="alert" hidden></p>
+          </div>
+          <div class="field">
+            <label>Skills you can teach <span style="font-weight:500;color:var(--text-faint)">(optional)</span></label>
+            <div class="tag-input" id="tagInput">
+              <span class="tag-chip">FIGMA <button class="btn btn-danger btn-icon" onclick="this.parentElement.remove()">×</button></span>
+              <span class="tag-chip">SPANISH <button class="btn btn-danger btn-icon" onclick="this.parentElement.remove()">×</button></span>
+              <input type="text" placeholder="Type a skill and press Enter" onkeydown="addTag(event)"/>
+            </div>
+            <p class="hint">Add as many as you like — you can edit these later.</p>
+          </div>
+          <div class="checkbox-row">
+            <input type="checkbox" id="terms" aria-describedby="termsError" required/>
+            <label for="terms">I agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a></label>
+          </div>
+          <p class="field-error" id="termsError" role="alert" hidden>Please accept the terms to continue.</p>
+          <button class="btn btn-primary btn-block btn-lg" id="registerSubmitButton" onclick="handleRegister()">Create account</button>
+        </form>
+
+        <div class="divider"><span class="line"></span><span>OR SIGN UP WITH</span><span class="line"></span></div>
+        <div class="social-row">
+          <button class="btn btn-secondary social-btn"><svg viewBox="0 0 24 24" width="16" height="16"><path fill="#EA4335" d="M12 10.2v3.9h5.5c-.24 1.4-1.7 4.1-5.5 4.1-3.3 0-6-2.7-6-6.2s2.7-6.2 6-6.2c1.9 0 3.1.8 3.8 1.5l2.6-2.5C16.8 3.2 14.6 2.2 12 2.2 6.9 2.2 2.7 6.4 2.7 12S6.9 21.8 12 21.8c6.9 0 8.3-6.4 7.7-9.6H12z"/></svg> Google</button>
+          <button class="btn btn-secondary social-btn"><svg viewBox="0 0 24 24" width="16" height="16" fill="var(--color-text-dark)"><path d="M12 2C6.5 2 2 6.6 2 12.2c0 4.5 2.9 8.3 6.8 9.6.5.1.7-.2.7-.5v-1.8c-2.8.6-3.4-1.3-3.4-1.3-.4-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1.1 1.5 1.1.9 1.5 2.3 1.1 2.9.8.1-.7.4-1.1.6-1.4-2.2-.2-4.6-1.1-4.6-5 0-1.1.4-2 1.1-2.7-.1-.3-.5-1.4.1-2.9 0 0 .9-.3 2.9 1.1a10 10 0 015.3 0c2-1.4 2.9-1.1 2.9-1.1.6 1.5.2 2.6.1 2.9.7.7 1.1 1.6 1.1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7 1 .7 2v2.9c0 .3.2.6.7.5 4-1.3 6.8-5.1 6.8-9.6C22 6.6 17.5 2 12 2z"/></svg> GitHub</button>
+        </div>
+        <p class="foot-line">Already a peer? <a onclick="showPage('login')">Log in</a></p>
+      </div>
+    </main>
+  </div>
+</section>
+
+<!-- ============ FORGOT PASSWORD ============ -->
+<section class="page" id="page-forgot">
+  <div class="auth-shell">
+    <aside class="auth-side">
+      <div>
+        <div class="brand on-dark">
+          <span class="logo-mark"><svg viewBox="0 0 40 40" fill="none"><circle cx="13" cy="13" r="7.5" fill="var(--color-accent)"/><circle cx="27" cy="27" r="7.5" fill="var(--color-error)"/><path d="M13 13L27 27" stroke="var(--color-background)" stroke-width="2.4" stroke-linecap="round"/><circle cx="20" cy="20" r="3" fill="var(--color-background)"/></svg></span>
+          <span class="wordmark"><span class="wm-ptp">PTP</span><span class="wm-rest">skill<span class="wm-x">X</span>change</span></span>
+        </div>
+        <div class="auth-copy">
+          <h2>Locked out happens. Let's fix it.</h2>
+          <p>We'll send a one-time code to your email so you can get straight back to your peers.</p>
+        </div>
+      </div>
+      <div class="auth-side-foot">
+        <div class="dots"><div style="background:var(--color-accent)"></div><div style="background:var(--color-error)"></div><div style="background:var(--color-primary)"></div></div>
+        Your matches and history stay right where you left them
+      </div>
+    </aside>
+
+    <main class="auth-main">
+      <div class="auth-box">
+        <a class="top-link" onclick="showPage('login')">← Back to login</a>
+        <div class="badge-icon-circle">
+          <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><rect x="4" y="5" width="16" height="14" rx="2.5" stroke="var(--color-primary-dark)" stroke-width="1.6"/><path d="M4 6.5L12 12.5L20 6.5" stroke="var(--color-primary-dark)" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+        <h1>Forgot your password?</h1>
+        <p class="sub">Enter the email on your account. We'll send a 6-digit code to verify it's you.</p>
+
+        <form onsubmit="return false;">
+          <div class="field">
+            <label>Email address</label>
+            <div class="input-wrap"><input type="email" placeholder="you@example.com" required/></div>
+          </div>
+          <button class="btn btn-primary btn-block btn-lg" onclick="showPage('otp')">Send reset code</button>
+        </form>
+        <p class="foot-line">Remembered it? <a onclick="showPage('login')">Log in instead</a></p>
+      </div>
+    </main>
+  </div>
+</section>
+
+<!-- ============ OTP ============ -->
+<section class="page" id="page-otp">
+  <div class="auth-shell">
+    <aside class="auth-side">
+      <div>
+        <div class="brand on-dark">
+          <span class="logo-mark"><svg viewBox="0 0 40 40" fill="none"><circle cx="13" cy="13" r="7.5" fill="var(--color-accent)"/><circle cx="27" cy="27" r="7.5" fill="var(--color-error)"/><path d="M13 13L27 27" stroke="var(--color-background)" stroke-width="2.4" stroke-linecap="round"/><circle cx="20" cy="20" r="3" fill="var(--color-background)"/></svg></span>
+          <span class="wordmark"><span class="wm-ptp">PTP</span><span class="wm-rest">skill<span class="wm-x">X</span>change</span></span>
+        </div>
+        <div class="auth-copy">
+          <h2>Just one code away.</h2>
+          <p>This keeps your account — and every peer connection tied to it — secure.</p>
+        </div>
+      </div>
+      <div class="auth-side-foot">
+        <div class="dots"><div style="background:var(--color-accent)"></div><div style="background:var(--color-error)"></div><div style="background:var(--color-primary)"></div></div>
+        Codes expire after 10 minutes for your security
+      </div>
+    </aside>
+
+    <main class="auth-main">
+      <div class="auth-box">
+        <a class="top-link" onclick="showPage('login')">← Back to login</a>
+        <div class="badge-icon-circle">
+          <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><rect x="5" y="10" width="14" height="10" rx="2.5" stroke="var(--color-primary-dark)" stroke-width="1.6"/><path d="M8 10V7a4 4 0 018 0v3" stroke="var(--color-primary-dark)" stroke-width="1.6"/></svg>
+        </div>
+        <h1>Verify it's you</h1>
+        <p class="sub">Enter the 6-digit code sent to <b>you@example.com</b></p>
+
+        <form onsubmit="return false;">
+          <div class="otp-row">
+            <input class="otp-box" maxlength="1" inputmode="numeric" oninput="otpMove(this,0)"/>
+            <input class="otp-box" maxlength="1" inputmode="numeric" oninput="otpMove(this,1)"/>
+            <input class="otp-box" maxlength="1" inputmode="numeric" oninput="otpMove(this,2)"/>
+            <input class="otp-box" maxlength="1" inputmode="numeric" oninput="otpMove(this,3)"/>
+            <input class="otp-box" maxlength="1" inputmode="numeric" oninput="otpMove(this,4)"/>
+            <input class="otp-box" maxlength="1" inputmode="numeric" oninput="otpMove(this,5)"/>
+          </div>
+          <div class="otp-meta">
+            <span class="timer" id="otpTimer">Code expires in 09:47</span>
+            <button type="button" class="btn btn-secondary resend" id="resendBtn">Resend code</button>
+          </div>
+          <button class="btn btn-primary btn-block btn-lg" onclick="showPage('reset')">Verify code</button>
+        </form>
+        <p class="foot-line">Wrong email? <a onclick="showPage('forgot')">Go back</a></p>
+      </div>
+    </main>
+  </div>
+</section>
+
+<!-- ============ RESET PASSWORD ============ -->
+<section class="page" id="page-reset">
+  <div class="auth-shell">
+    <aside class="auth-side">
+      <div>
+        <div class="brand on-dark">
+          <span class="logo-mark"><svg viewBox="0 0 40 40" fill="none"><circle cx="13" cy="13" r="7.5" fill="var(--color-accent)"/><circle cx="27" cy="27" r="7.5" fill="var(--color-error)"/><path d="M13 13L27 27" stroke="var(--color-background)" stroke-width="2.4" stroke-linecap="round"/><circle cx="20" cy="20" r="3" fill="var(--color-background)"/></svg></span>
+          <span class="wordmark"><span class="wm-ptp">PTP</span><span class="wm-rest">skill<span class="wm-x">X</span>change</span></span>
+        </div>
+        <div class="auth-copy">
+          <h2>Set a fresh password.</h2>
+          <p>Make it strong — it's the key to every peer connection you've built.</p>
+        </div>
+      </div>
+      <div class="auth-side-foot">
+        <div class="dots"><div style="background:var(--color-accent)"></div><div style="background:var(--color-error)"></div><div style="background:var(--color-primary)"></div></div>
+        We never store your password in plain text
+      </div>
+    </aside>
+
+    <main class="auth-main">
+      <div class="auth-box">
+        <a class="top-link" onclick="showPage('otp')">← Back</a>
+        <div class="badge-icon-circle">
+          <svg viewBox="0 0 24 24" fill="none" width="24" height="24"><rect x="5" y="10" width="14" height="10" rx="2.5" stroke="var(--color-primary-dark)" stroke-width="1.6"/><circle cx="12" cy="15" r="1.4" fill="var(--color-primary-dark)"/><path d="M8 10V7a4 4 0 018 0v3" stroke="var(--color-primary-dark)" stroke-width="1.6"/></svg>
+        </div>
+        <h1>Create new password</h1>
+        <p class="sub">Choose something you haven't used here before.</p>
+
+        <form onsubmit="return false;">
+          <div class="field">
+            <label>New password</label>
+            <div class="input-wrap has-icon">
+              <input type="password" id="newPw" placeholder="At least 8 characters" oninput="checkStrength(this.value)"/>
+              <span class="toggle-eye" onclick="toggleEye('newPw')"><svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M2 12C4 7 8 4.5 12 4.5S20 7 22 12C20 17 16 19.5 12 19.5S4 17 2 12Z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/></svg></span>
+            </div>
+            <div class="strength"><div id="s1"></div><div id="s2"></div><div id="s3"></div><div id="s4"></div></div>
+            <div class="strength-label" id="strengthLabel">Enter a password</div>
+          </div>
+          <div class="field">
+            <label>Confirm new password</label>
+            <div class="input-wrap has-icon">
+              <input type="password" id="confirmPw" placeholder="Re-enter your password"/>
+              <span class="toggle-eye" onclick="toggleEye('confirmPw')"><svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M2 12C4 7 8 4.5 12 4.5S20 7 22 12C20 17 16 19.5 12 19.5S4 17 2 12Z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.6"/></svg></span>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-block btn-lg" onclick="showPage('login')">Reset password</button>
+        </form>
+      </div>
+    </main>
+  </div>
+</section>
+
+<!-- ============ DASHBOARD ============ -->
+<section class="page" id="page-dashboard">
+  <nav class="nav">
+    <div class="brand">
+      <span class="logo-mark">
+        <svg viewBox="0 0 40 40" fill="none"><circle cx="13" cy="13" r="7.5" fill="var(--color-accent)"/><circle cx="27" cy="27" r="7.5" fill="var(--color-error)"/><path d="M13 13L27 27" stroke="var(--color-background)" stroke-width="2.4" stroke-linecap="round"/><circle cx="20" cy="20" r="3" fill="var(--color-background)"/></svg>
+      </span>
+      <span class="wordmark"><span class="wm-ptp">PTP</span><span class="wm-rest">skill<span class="wm-x">X</span>change</span></span>
+    </div>
+    <div class="nav-cta">
+      <button class="btn btn-secondary notification-nav-button" id="notificationNavButton" type="button" onclick="scrollToRequests()" aria-label="Notifications: No new notifications" title="No new notifications">Notifications <span class="notification-nav-count" id="notificationTotal" hidden>0</span></button>
+      <button class="btn btn-secondary" type="button" onclick="scrollToMessages()">Messages <span class="message-nav-count" id="messageUnreadTotal" hidden>0</span></button>
+      <button class="btn btn-secondary" type="button" onclick="scrollToLeaderboard()">Leaderboard</button>
+      <button class="btn btn-secondary" onclick="handleLogout()">Log out</button>
+    </div>
+  </nav>
+
+  <div class="profile-wrap" style="padding-top:36px;">
+
+    <div class="profile-card">
+      <div class="profile-banner"></div>
+      <div class="profile-top">
+        <div class="avatar-wrap">
+          <div class="avatar-circle" id="avatarCircle">
+            <span class="avatar-initials" id="avatarInitials">?</span>
+          </div>
+          <label class="avatar-edit-btn" title="Change photo">
+            <svg viewBox="0 0 24 24" fill="none" width="15" height="15"><path d="M4 7.5H7L9 5H15L17 7.5H20V19H4V7.5Z" stroke="var(--color-card-bg)" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.2" stroke="var(--color-card-bg)" stroke-width="1.6"/></svg>
+            <input type="file" accept="image/*" id="avatarInput" onchange="handleAvatarUpload(event)"/>
+          </label>
+        </div>
+
+        <div class="profile-name-row">
+          <div>
+            <h2 id="dashName">Welcome!</h2>
+            <p class="p-email" id="dashEmail">Loading...</p>
+          </div>
+        </div>
+
+        <p class="profile-headline editable" id="profileHeadline" contenteditable="true" data-placeholder="Add a short headline — e.g. 'Frontend dev learning Spanish, teaches Figma & JS'" aria-describedby="profileHeadlineCounter">Add a short headline about yourself…</p>
+        <p class="profile-headline-counter" id="profileHeadlineCounter" aria-live="polite">0/100 characters</p>
+
+        <div class="stats-row">
+          <div class="stat-box"><b id="statSwaps">0</b><span>Swaps completed</span></div>
+          <div class="stat-box"><b id="statRating">—</b><span>Peer rating</span></div>
+          <div class="stat-box"><b id="statSince">2026</b><span>Member since</span></div>
+        </div>
+        <section class="profile-badges" aria-labelledby="profileBadgesTitle">
+          <h3 id="profileBadgesTitle">Badges</h3>
+          <div class="profile-badge-list" id="profileBadges" aria-live="polite">
+            <span class="profile-badges-empty">Loading badges…</span>
+          </div>
+        </section>
+        <section class="profile-ratings" aria-labelledby="profileRatingsTitle">
+          <h3 id="profileRatingsTitle">Ratings received</h3>
+          <div class="profile-ratings-list" id="profileRatingsList" aria-live="polite">Loading ratings…</div>
+        </section>
+      </div>
+    </div>
+
+    <section class="leaderboard-section" id="leaderboardSection" aria-labelledby="leaderboardTitle">
+      <div class="leaderboard-heading">
+        <div>
+          <h3 id="leaderboardTitle">Leaderboard</h3>
+          <p>Top contributors, ranked by peer rating and completed swaps.</p>
+        </div>
+        <button class="btn btn-secondary" id="leaderboardRefreshButton" type="button" onclick="loadLeaderboard()" aria-label="Refresh leaderboard">Refresh</button>
+      </div>
+      <p class="leaderboard-rank" id="leaderboardMyRank" aria-live="polite">Your rank: loading…</p>
+      <p class="leaderboard-status" id="leaderboardStatus" role="status" aria-live="polite">Loading leaderboard…</p>
+      <div class="leaderboard-table-wrap">
+        <table class="leaderboard-table">
+          <thead>
+            <tr><th scope="col">Rank</th><th scope="col">Contributor</th><th scope="col">Rating</th><th scope="col">Swaps</th><th scope="col">Verified</th><th scope="col">Badges</th></tr>
+          </thead>
+          <tbody id="leaderboardRows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="dashboard-connections">
+      <section class="matches-panel" aria-labelledby="dashboardMatchesTitle">
+        <h3 id="dashboardMatchesTitle">Matched peers</h3>
+        <div class="network-card dashboard-peer-graph">
+          <svg id="dashboardPeerGraphSvg" viewBox="0 0 380 350" fill="none" role="img" aria-label="Your matched peers"></svg>
+          <p class="network-message" id="dashboardPeerGraphMessage" role="status">Loading peer matches…</p>
+        </div>
+      </section>
+      <section class="swap-requests-panel" id="swapRequestsPanel" aria-labelledby="receivedRequestsTitle">
+        <h3 id="receivedRequestsTitle">Requests</h3>
+        <p class="request-feedback" id="swapRequestFeedback" role="status" aria-live="polite"></p>
+        <h4 class="request-section-title">Pending requests</h4>
+        <div class="request-list" id="receivedRequestsList" aria-live="polite">Loading requests…</div>
+        <h4 class="request-section-title">Sent requests</h4>
+        <div class="request-list" id="sentRequestsList" aria-live="polite">Loading sent requests…</div>
+        <h4 class="request-section-title">Accepted swaps</h4>
+        <div class="request-list" id="acceptedSwapsList" aria-live="polite">Loading swaps…</div>
+      </section>
+    </div>
+
+    <section class="messages-panel" id="messagesPanel" aria-labelledby="messagesTitle">
+      <h3 id="messagesTitle">Messages</h3>
+      <p class="messages-status" id="messagesStatus" role="status" aria-live="polite">Choose an accepted peer to start chatting.</p>
+      <div class="messages-layout">
+        <nav class="message-conversation-list" id="messageConversationList" aria-label="Conversations"></nav>
+        <section class="message-thread" aria-label="Message thread">
+          <header class="message-thread-header">
+            <strong id="messagePeerName">Select an accepted peer</strong>
+          </header>
+          <div class="message-log" id="messageLog" role="log" aria-live="polite" aria-relevant="additions text">
+            <p>Select someone from your accepted swaps to open a conversation.</p>
+          </div>
+          <form class="message-composer" id="messageComposer" onsubmit="sendDirectMessage(event)">
+            <label for="messageInput" hidden>Message</label>
+            <div class="message-composer-field">
+              <input id="messageInput" type="text" autocomplete="off" placeholder="Write a message…" maxlength="500" aria-describedby="messageCharacterCount" disabled required/>
+              <span class="message-composer-counter" id="messageCharacterCount" aria-live="polite">0/500</span>
+            </div>
+            <button class="btn btn-primary" id="sendMessageButton" type="submit" disabled>Send</button>
+          </form>
+        </section>
+      </div>
+    </section>
+
+    <div class="skills-section">
+      <h3><span class="dot-teach"></span> Skills I can teach</h3>
+      <p class="desc">Add the skills you're confident helping someone else learn.</p>
+      <div class="tag-input" id="teachTagInput">
+        <input type="text" placeholder="Type a skill and press Enter" onkeydown="addSkillTag(event,'teach')"/>
+      </div>
+      <div id="verifiedSkillsEmptyState" hidden></div>
+    </div>
+
+    <div class="skills-section">
+      <h3><span class="dot-learn"></span> Skills I want to learn</h3>
+      <p class="desc">Add the skills you're hoping a peer can teach you.</p>
+      <div class="tag-input" id="learnTagInput">
+        <input type="text" placeholder="Type a skill and press Enter" onkeydown="addSkillTag(event,'learn')"/>
+      </div>
+    </div>
+
+    <div class="profile-actions">
+      <button class="btn btn-primary" id="saveProfileButton" onclick="saveProfile()">Save profile</button>
+      <button class="btn btn-secondary" onclick="showPage('landing')">Find peers</button>
+      <span class="save-note" id="saveNote">✓ Saved</span>
+    </div>
+
+  </div>
+</section>
+
+<dialog class="swap-dialog" id="sendSwapDialog" aria-labelledby="sendSwapTitle">
+  <h2 id="sendSwapTitle">Send a swap request</h2>
+  <p>Request a skill exchange with <strong id="swapPeerName"></strong><span class="peer-badge-icons" id="swapPeerBadges" hidden></span>.</p>
+  <label for="swapSkillInput">Matched skill</label>
+  <p id="swapSkillVerification" class="swap-skill-verification" role="status"></p>
+  <input id="swapSkillInput" type="text" readonly/>
+  <div class="swap-dialog-actions">
+    <button class="btn btn-secondary" type="button" onclick="closeSwapRequestDialog()">Cancel</button>
+    <button class="btn btn-primary" id="sendSwapRequestButton" type="button" onclick="sendSwapRequest()">Send Swap Request</button>
+  </div>
+</dialog>
+
+<dialog class="swap-dialog" id="rateSwapDialog" aria-labelledby="rateSwapTitle">
+  <h2 id="rateSwapTitle">Rate this swap</h2>
+  <p>Share your feedback about the swap with <strong id="ratePeerName"></strong>.</p>
+  <label for="ratingScoreInput">Rating (1 to 5)</label>
+  <input id="ratingScoreInput" type="number" min="1" max="5" step="1" aria-describedby="ratingScoreError" required/>
+  <p class="field-error" id="ratingScoreError" role="alert" hidden>Choose a rating from 1 to 5.</p>
+  <label for="ratingCommentInput" style="margin-top:14px">Comment (optional)</label>
+  <textarea id="ratingCommentInput" maxlength="2000" placeholder="What went well?"></textarea>
+  <div class="swap-dialog-actions">
+    <button class="btn btn-secondary" type="button" onclick="closeRatingDialog()">Cancel</button>
+    <button class="btn btn-primary" id="submitRatingButton" type="button" onclick="submitSwapRating()">Submit rating</button>
+  </div>
+</dialog>
+
+<dialog class="swap-dialog skill-quiz-dialog" id="skillQuizDialog" aria-labelledby="skillQuizTitle">
+  <div class="skill-chat-heading">
+    <h2 id="skillQuizTitle">Verify a skill</h2>
+    <button class="btn btn-secondary btn-icon skill-chat-close" type="button" aria-label="Close skill quiz" onclick="closeSkillQuizDialog()">×</button>
+  </div>
+  <p id="skillQuizStatus" class="skill-quiz-status" role="status" aria-live="polite">Preparing quiz…</p>
+  <form id="skillQuizForm" class="skill-quiz-form" onsubmit="submitSkillQuiz(event)" hidden>
+    <div id="skillQuizQuestions" class="skill-quiz-questions"></div>
+    <button class="btn btn-primary skill-quiz-submit" id="skillQuizSubmitButton" type="submit">Submit answers</button>
+  </form>
+  <p id="skillChatResult" class="skill-chat-result" role="status" aria-live="polite" hidden></p>
+</dialog>
+
+<script>
+function toggleEye(id){
+  const input = document.getElementById(id);
+  input.type = input.type === 'password' ? 'text' : 'password';
+}
+
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  if(name !== 'dashboard'){
+    stopMessagePolling();
+    stopNotificationPolling();
+  }
+  window.scrollTo({ top: 0, behavior: 'auto' });
+}
+
+let appToastTimer = null;
+const API_CONNECTION_MESSAGE = "Can't connect to the server. Please check your connection.";
+const SESSION_EXPIRED_MESSAGE = 'Your session expired, please log in again';
+
+function showToast(message, type='info'){
+  const toast = document.getElementById('appToast');
+  const toastType = ['success', 'error', 'info'].includes(type) ? type : 'info';
+  toast.textContent = message;
+  toast.className = `app-toast ${toastType}`;
+  toast.setAttribute('role', toastType === 'error' ? 'alert' : 'status');
+  toast.hidden = false;
+  clearTimeout(appToastTimer);
+  appToastTimer = setTimeout(() => { toast.hidden = true; }, 3000);
+}
+
+function beginButtonLoading(button, loadingText){
+  if(!button) return () => {};
+  if(button.dataset.loading === 'true') return null;
+
+  const originalNodes = Array.from(button.childNodes).map(node => node.cloneNode(true));
+  const wasDisabled = button.disabled;
+  const wasBusy = button.getAttribute('aria-busy');
+  let restored = false;
+  button.dataset.loading = 'true';
+  button.disabled = true;
+  button.setAttribute('aria-busy', 'true');
+  const content = document.createElement('span');
+  content.className = 'button-loading-content';
+  const spinner = document.createElement('span');
+  spinner.className = 'loading-spinner';
+  spinner.setAttribute('aria-hidden', 'true');
+  const label = document.createElement('span');
+  label.textContent = loadingText;
+  content.append(spinner, label);
+  button.replaceChildren(content);
+
+  return (disabled = wasDisabled) => {
+    if(restored) return;
+    restored = true;
+    button.replaceChildren(...originalNodes);
+    button.disabled = disabled;
+    delete button.dataset.loading;
+    if(wasBusy === null) button.removeAttribute('aria-busy');
+    else button.setAttribute('aria-busy', wasBusy);
+  };
+}
+
+function reportApiError(error, fallback){
+  if(error?.feedbackShown) return error.message || fallback;
+  const message = error?.networkFailure
+    ? API_CONNECTION_MESSAGE
+    : error?.name === 'SyntaxError'
+    ? fallback
+    : error?.message || fallback;
+  showToast(message, 'error');
+  if(error && typeof error === 'object') error.feedbackShown = true;
+  return message;
+}
+
+async function apiFetch(url, options={}){
+  let response;
+  try{
+    response = await fetch(url, options);
+  } catch(error){
+    if(error.name === 'AbortError') throw error;
+    const networkError = new Error(API_CONNECTION_MESSAGE);
+    networkError.networkFailure = true;
+    throw networkError;
+  }
+
+  const isAuthenticatedRequest = new Headers(options.headers || {}).has('Authorization');
+  if(response.status === 401 && isAuthenticatedRequest){
+    handleExpiredSession();
+    const error = new Error(SESSION_EXPIRED_MESSAGE);
+    error.feedbackShown = true;
+    throw error;
+  }
+  return response;
+}
+
+function authErrorMessage(data, fallback){
+  if(data?.detail === 'Email already registered'){
+    return 'This email is already registered.';
+  }
+  return typeof data?.detail === 'string' && data.detail.trim()
+    ? data.detail
+    : fallback;
+}
+
+const registerEmailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function validateRegisterField(input){
+  const value = input.value;
+  let message = '';
+  if(input.id === 'regName' && !value.trim()){
+    message = 'Please enter your name.';
+  } else if(input.id === 'regEmail'){
+    if(!value.trim()) message = 'Please enter your email.';
+    else if(!registerEmailPattern.test(value.trim())) message = 'Please enter a valid email.';
+  } else if(input.id === 'regPw'){
+    if(!value) message = 'Please enter a password.';
+    else if(value.length < 6) message = 'Password must be at least 6 characters.';
+  }
+
+  const error = document.getElementById(`${input.id}Error`);
+  error.textContent = message;
+  error.hidden = !message;
+  input.closest('.field').classList.toggle('invalid', Boolean(message));
+  input.setAttribute('aria-invalid', String(Boolean(message)));
+  input.dataset.touched = 'true';
+  return !message;
+}
+
+function validateRegisterForm(){
+  const fieldsValid = ['regName', 'regEmail', 'regPw']
+    .map(id => validateRegisterField(document.getElementById(id)))
+    .every(Boolean);
+  const terms = document.getElementById('terms');
+  const termsError = document.getElementById('termsError');
+  terms.dataset.touched = 'true';
+  termsError.hidden = terms.checked;
+  terms.setAttribute('aria-invalid', String(!terms.checked));
+  return fieldsValid && terms.checked;
+}
+
+['regName', 'regEmail', 'regPw'].forEach(id => {
+  const input = document.getElementById(id);
+  input.addEventListener('blur', () => validateRegisterField(input));
+  input.addEventListener('input', () => {
+    if(input.dataset.touched === 'true') validateRegisterField(input);
+  });
+});
+
+document.getElementById('terms').addEventListener('change', () => {
+  if(document.getElementById('terms').dataset.touched === 'true') validateRegisterForm();
+});
+
+function scrollToMessages(){
+  document.getElementById('messagesPanel')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function scrollToRequests(){
+  document.getElementById('swapRequestsPanel')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function scrollToLeaderboard(){
+  document.getElementById('leaderboardSection')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function otpMove(el, idx){
+  el.value = el.value.replace(/[^0-9]/g,'');
+  const boxes = document.querySelectorAll('#page-otp .otp-box');
+  if(el.value && idx < boxes.length-1){ boxes[idx+1].focus(); }
+}
+document.querySelectorAll('#page-otp .otp-box').forEach((box, idx)=>{
+  box.addEventListener('keydown', (e)=>{
+    const boxes = document.querySelectorAll('#page-otp .otp-box');
+    if(e.key==='Backspace' && !box.value && idx>0){ boxes[idx-1].focus(); }
+  });
+});
+
+function addTag(e){
+  if(e.key==='Enter' && e.target.value.trim()){
+    e.preventDefault();
+    const chip = document.createElement('span');
+    chip.className='tag-chip';
+    chip.innerHTML = e.target.value.trim().toUpperCase() + ' <button class="btn btn-danger btn-icon" onclick="this.parentElement.remove()">×</button>';
+    e.target.parentElement.insertBefore(chip, e.target);
+    e.target.value='';
+  }
+}
+
+function checkStrength(val){
+  const bars = [document.getElementById('s1'),document.getElementById('s2'),document.getElementById('s3'),document.getElementById('s4')];
+  const label = document.getElementById('strengthLabel');
+  let score = 0;
+  if(val.length>=8) score++;
+  if(/[A-Z]/.test(val)) score++;
+  if(/[0-9]/.test(val)) score++;
+  if(/[^A-Za-z0-9]/.test(val)) score++;
+  const colors = ['var(--color-error)','var(--color-error)','var(--color-primary)','var(--color-accent)'];
+  const labels = ['Too weak','Weak','Good','Strong'];
+  bars.forEach((b,i)=>{ b.style.background = i < score ? colors[Math.max(score-1,0)] : 'var(--paper-3)'; });
+  label.textContent = val.length===0 ? 'Enter a password' : labels[Math.max(score-1,0)];
+}
+
+(function(){
+  let seconds = 587;
+  const el = document.getElementById('otpTimer');
+  const resend = document.getElementById('resendBtn');
+  resend.disabled = true;
+  const t = setInterval(()=>{
+    seconds--;
+    if(seconds<=0){ clearInterval(t); el.textContent='Code expired'; resend.disabled=false; return; }
+    const m = String(Math.floor(seconds/60)).padStart(2,'0');
+    const s = String(seconds%60).padStart(2,'0');
+    el.textContent = `Code expires in ${m}:${s}`;
+  }, 1000);
+})();
+
+/* ===== Backend connection: Register ===== */
+async function handleRegister(){
+  const name = document.getElementById('regName').value;
+  const email = document.getElementById('regEmail').value;
+  const password = document.getElementById('regPw').value;
+
+  if(!validateRegisterForm()){
+    showToast('Please correct the highlighted registration fields.', 'error');
+    return;
+  }
+
+  const restoreButton = beginButtonLoading(
+    document.getElementById('registerSubmitButton'),
+    'Creating account...'
+  );
+  if(!restoreButton) return;
+
+  try{
+    const response = await apiFetch('http://127.0.0.1:8000/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: name.trim(), email: email.trim(), password: password })
+    });
+
+    const data = await response.json();
+
+    if(response.ok){
+      showToast('Account created successfully. Please log in.', 'success');
+      showPage('login');
+    } else {
+      showToast(authErrorMessage(data, 'Registration failed.'), 'error');
+    }
+  } catch(err){
+    reportApiError(err, 'Registration failed. Please try again.');
+  } finally{
+    restoreButton();
+  }
+}
+
+function validateLoginField(input){
+  const value = input.value;
+  let message = '';
+  if(input.id === 'loginEmail'){
+    if(!value.trim()) message = 'Please enter your email.';
+    else if(!registerEmailPattern.test(value.trim())) message = 'Please enter a valid email.';
+  } else if(input.id === 'loginPw' && !value.trim()){
+    message = 'Please enter your password.';
+  }
+
+  const error = document.getElementById(`${input.id}Error`);
+  error.textContent = message;
+  error.hidden = !message;
+  input.closest('.field').classList.toggle('invalid', Boolean(message));
+  input.setAttribute('aria-invalid', String(Boolean(message)));
+  input.dataset.touched = 'true';
+  return !message;
+}
+
+function validateLoginForm(){
+  return ['loginEmail', 'loginPw']
+    .map(id => validateLoginField(document.getElementById(id)))
+    .every(Boolean);
+}
+
+['loginEmail', 'loginPw'].forEach(id => {
+  const input = document.getElementById(id);
+  input.addEventListener('blur', () => validateLoginField(input));
+  input.addEventListener('input', () => {
+    if(input.dataset.touched === 'true') validateLoginField(input);
+  });
+});
+
+/* ===== Backend connection: Login ===== */
+async function handleLogin(){
+  const email = document.getElementById('loginEmail').value;
+  const password = document.getElementById('loginPw').value;
+
+  if(!validateLoginForm()){
+    showToast('Please correct the highlighted login fields.', 'error');
+    return;
+  }
+
+  const restoreButton = beginButtonLoading(
+    document.getElementById('loginSubmitButton'),
+    'Logging in...'
+  );
+  if(!restoreButton) return;
+
+  try{
+    const formBody = new URLSearchParams();
+    formBody.append('username', email.trim());
+    formBody.append('password', password);
+    const response = await apiFetch('http://127.0.0.1:8000/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: formBody
+    });
+    const data = await response.json();
+
+    if(response.ok){
+      localStorage.setItem('access_token', data.access_token);
+      if(sessionExpiredRedirectTimer) clearTimeout(sessionExpiredRedirectTimer);
+      sessionExpiredRedirectTimer = null;
+      sessionExpirationInProgress = false;
+      showToast('Login successful.', 'success');
+      showPage('dashboard');
+      loadDashboard();
+    } else {
+      showToast(authErrorMessage(data, 'Login failed.'), 'error');
+    }
+  } catch(err){
+    reportApiError(err, 'Login failed. Please try again.');
+  } finally{
+    restoreButton();
+  }
+}
+
+/* ===== Dashboard: fetch current user ===== */
+async function loadDashboard(){
+  const token = localStorage.getItem('access_token');
+  if(!token){
+    showPage('login');
+    return;
+  }
+
+  try{
+    const response = await apiFetch('http://127.0.0.1:8000/me', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+
+    if(response.ok){
+      const user = await response.json();
+      showToast('Dashboard loaded.', 'success');
+      document.getElementById('dashName').textContent = 'Welcome, ' + user.name + '!';
+      document.getElementById('dashEmail').textContent = user.email;
+      document.getElementById('avatarInitials').textContent = getInitials(user.name);
+      currentProfileEmail = user.email;
+      currentUserId = user.id;
+      loadProfileRatings(user.id);
+      loadLeaderboard();
+      loadProfileExtras();
+      loadPeerSuggestions();
+      loadReceivedRequests();
+      startMessagePolling();
+      startNotificationPolling();
+    } else {
+      const errorData = await response.json().catch(()=>({}));
+      localStorage.removeItem('access_token');
+      showPage('login');
+      resetNotificationSummary();
+      showToast(errorData.detail || SESSION_EXPIRED_MESSAGE, 'error');
+    }
+  } catch(err){
+    console.error(err);
+    reportApiError(err, 'Could not load your dashboard. Please try again.');
+  }
+}
+
+async function loadLeaderboard(){
+  const token = localStorage.getItem('access_token');
+  const status = document.getElementById('leaderboardStatus');
+  const rows = document.getElementById('leaderboardRows');
+  const rankSummary = document.getElementById('leaderboardMyRank');
+  if(!token || !status || !rows || !rankSummary) return;
+  const restoreButton = beginButtonLoading(
+    document.getElementById('leaderboardRefreshButton'),
+    'Refreshing...'
+  );
+  if(!restoreButton) return;
+
+  const requestId = ++leaderboardRequestId;
+  status.classList.remove('error');
+  status.textContent = 'Loading leaderboard…';
+  try{
+    const response = await apiFetch('http://127.0.0.1:8000/leaderboard', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    const data = await response.json().catch(()=>({}));
+    if(!response.ok) throw new Error(data.detail || 'Could not load leaderboard');
+    showToast('Leaderboard loaded.', 'success');
+    if(requestId !== leaderboardRequestId || token !== localStorage.getItem('access_token')) return;
+
+    const entries = Array.isArray(data.leaderboard) ? data.leaderboard : [];
+    rows.replaceChildren();
+    rankSummary.textContent = Number.isInteger(data.my_rank)
+      ? `Your rank: #${data.my_rank}`
+      : 'Your rank: unrated';
+    status.textContent = entries.length
+      ? `Showing ${entries.length} top contributors.`
+      : 'No rated contributors yet.';
+
+    if(entries.length === 0){
+      const row = document.createElement('tr');
+      const message = document.createElement('td');
+      message.colSpan = 6;
+      renderEmptyState(
+        message,
+        '🏆',
+        'No leaderboard entries yet.',
+        'Leaderboard will appear once users start completing swaps.'
+      );
+      row.appendChild(message);
+      rows.appendChild(row);
+      return;
+    }
+
+    const medals = { 1: '🥇', 2: '🥈', 3: '🥉' };
+    // Render user-provided names and headlines as text, never markup.
+    entries.forEach(entry => {
+      const row = document.createElement('tr');
+      const isCurrentUser = Number(entry.id) === Number(currentUserId);
+      row.classList.toggle('is-current-user', isCurrentUser);
+
+      const rankCell = document.createElement('td');
+      rankCell.className = 'leaderboard-rank-cell';
+      const rankLabel = medals[entry.rank] || `#${entry.rank}`;
+      rankCell.textContent = rankLabel;
+      rankCell.setAttribute('aria-label', `Rank ${entry.rank}`);
+      if(medals[entry.rank]) rankCell.classList.add('leaderboard-medal');
+
+      const contributorCell = document.createElement('td');
+      const name = document.createElement('span');
+      name.className = 'leaderboard-name';
+      name.textContent = entry.name || 'Member';
+      const headline = document.createElement('span');
+      headline.className = 'leaderboard-headline';
+      headline.textContent = entry.headline || 'No headline';
+      contributorCell.append(name, headline);
+
+      const ratingCell = document.createElement('td');
+      const rating = Number(entry.rating) || 0;
+      const stars = document.createElement('span');
+      stars.className = 'leaderboard-stars';
+      stars.textContent = '★'.repeat(Math.max(0, Math.min(5, Math.round(rating)))) || '☆☆☆☆☆';
+      stars.setAttribute('aria-label', `${rating.toFixed(1)} out of 5 stars`);
+      const ratingValue = document.createElement('span');
+      ratingValue.textContent = ` ${rating.toFixed(1)}`;
+      ratingCell.append(stars, ratingValue);
+
+      const swapsCell = document.createElement('td');
+      swapsCell.textContent = String(entry.swaps_completed ?? 0);
+      const verifiedCell = document.createElement('td');
+      verifiedCell.textContent = String(entry.verified_skills_count ?? 0);
+
+      const badgesCell = document.createElement('td');
+      const badgeList = document.createElement('span');
+      badgeList.className = 'leaderboard-badges';
+      (Array.isArray(entry.badge_icons) ? entry.badge_icons : []).forEach(icon => {
+        if(typeof icon !== 'string' || !icon) return;
+        const badge = document.createElement('span');
+        badge.className = 'leaderboard-badge-icon';
+        badge.textContent = icon;
+        badge.setAttribute('aria-hidden', 'true');
+        badgeList.appendChild(badge);
+      });
+      const badgeCount = document.createElement('span');
+      badgeCount.className = 'leaderboard-badge-count';
+      badgeCount.textContent = String(entry.badges_count ?? 0);
+      badgeList.appendChild(badgeCount);
+      badgesCell.appendChild(badgeList);
+
+      row.append(rankCell, contributorCell, ratingCell, swapsCell, verifiedCell, badgesCell);
+      rows.appendChild(row);
+    });
+  } catch(error){
+    if(requestId !== leaderboardRequestId) return;
+    status.classList.add('error');
+    status.textContent = reportApiError(error, 'Could not load leaderboard.');
+  } finally{
+    restoreButton();
+  }
+}
+
+function handleLogout(){
+  localStorage.removeItem('access_token');
+  currentUserId = null;
+  leaderboardRequestId++;
+  acceptedMessagingPeers = [];
+  conversationSummaries = [];
+  activeMessagePeer = null;
+  stopMessagePolling();
+  stopNotificationPolling();
+  resetNotificationSummary();
+  renderMessagingConversationList();
+  renderMessageThread([]);
+  renderPeerGraph([]);
+  document.getElementById('peerGraphMessage').textContent = 'Log in to see matched peers.';
+  showPage('landing');
+}
+
+/* ===== Profile extras: avatar, headline, teach/learn skills ===== */
+let currentProfileEmail = null;
+let currentUserId = null;
+let leaderboardRequestId = 0;
+let currentVerifiedSkills = new Set();
+let currentSkillVerifications = new Map();
+let activeSkillQuiz = null;
+let acceptedMessagingPeers = [];
+let conversationSummaries = [];
+let activeMessagePeer = null;
+let messagePollingTimer = null;
+let messageThreadRequestId = 0;
+let messageRefreshInProgress = false;
+let notificationPollingTimer = null;
+let notificationRequestController = null;
+let sessionExpiredRedirectTimer = null;
+let sessionExpirationInProgress = false;
+let messageThreadFailureNotified = false;
+let messageRefreshFailureNotified = false;
+let notificationFailureNotified = false;
+
+function handleExpiredSession(){
+  if(sessionExpirationInProgress) return;
+  sessionExpirationInProgress = true;
+  localStorage.removeItem('access_token');
+  currentUserId = null;
+  leaderboardRequestId++;
+  stopMessagePolling();
+  stopNotificationPolling();
+  resetNotificationSummary();
+  showToast(SESSION_EXPIRED_MESSAGE, 'error');
+  sessionExpiredRedirectTimer = setTimeout(() => {
+    showPage('login');
+    sessionExpiredRedirectTimer = null;
+  }, 1200);
+}
+
+function renderProfileBadges(badges){
+  const list = document.getElementById('profileBadges');
+  if(!list) return;
+  list.replaceChildren();
+
+  const earnedBadges = Array.isArray(badges)
+    ? badges.filter(badge => badge && typeof badge.name === 'string' && typeof badge.icon === 'string')
+    : [];
+  if(earnedBadges.length === 0){
+    renderEmptyState(
+      list,
+      '🏅',
+      'No badges yet.',
+      'Complete swaps and verify skills to start earning badges!'
+    );
+    return;
+  }
+
+  earnedBadges.forEach(badge => {
+    const chip = document.createElement('span');
+    chip.className = 'profile-badge-chip';
+    const icon = document.createElement('span');
+    icon.className = 'profile-badge-icon';
+    icon.setAttribute('aria-hidden', 'true');
+    icon.textContent = badge.icon;
+    const name = document.createElement('span');
+    name.textContent = badge.name;
+    chip.append(icon, name);
+    list.appendChild(chip);
+  });
+}
+
+function getInitials(name){
+  if(!name) return '?';
+  const parts = name.trim().split(/\s+/);
+  const initials = parts.slice(0,2).map(p=>p[0]?.toUpperCase()||'').join('');
+  return initials || '?';
+}
+
+async function loadProfileExtras(){
+  const token = localStorage.getItem('access_token');
+  if(!token) return;
+
+  try{
+    const response = await apiFetch('http://127.0.0.1:8000/profile/me', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+
+    if(!response.ok){
+      const errorData = await response.json().catch(()=>({}));
+      throw new Error(errorData.detail || 'Could not load profile');
+    }
+
+    const data = await response.json();
+    showToast('Profile loaded.', 'success');
+    renderProfileBadges(data.badges);
+    const headlineEl = document.getElementById('profileHeadline');
+    headlineEl.textContent = data.headline || "Add a short headline about yourself…";
+    updateProfileHeadlineCounter();
+
+    if(data.avatar_url){
+      setAvatarImage(new URL(data.avatar_url, 'http://127.0.0.1:8000').href);
+    } else {
+      document.getElementById('avatarCircle').innerHTML = '<span class="avatar-initials" id="avatarInitials">' + getInitials(document.getElementById('dashName').textContent.replace('Welcome, ','').replace('!','')) + '</span>';
+    }
+
+    document.getElementById('statSwaps').textContent = data.swaps_completed ?? 0;
+    const currentRating = Number(data.rating);
+    document.getElementById('statRating').textContent = Number.isFinite(currentRating)
+      ? currentRating.toFixed(1)
+      : '—';
+
+    currentSkillVerifications = new Map(
+      (data.skill_verifications || [])
+        .filter(item => item && typeof item.skill === 'string')
+        .map(item => [item.skill.trim().toLocaleLowerCase(), item])
+    );
+    currentVerifiedSkills = new Set(
+      currentSkillVerifications.size
+        ? Array.from(currentSkillVerifications.entries())
+            .filter(([, item]) => item.is_verified === true)
+            .map(([skillKey]) => skillKey)
+        : (data.verified_skills || [])
+            .filter(skill => typeof skill === 'string')
+            .map(skill => skill.trim().toLocaleLowerCase())
+    );
+    clearTagInput('teachTagInput');
+    clearTagInput('learnTagInput');
+    (data.skills_teach || []).forEach(skill => renderSkillTag('teachTagInput', skill, 'teach', currentVerifiedSkills));
+    (data.skills_learn || []).forEach(skill => renderSkillTag('learnTagInput', skill, 'learn'));
+    renderVerifiedSkillsEmptyState();
+  } catch(err){
+    console.error(err);
+    reportApiError(err, 'Could not load your profile. Please try again.');
+  }
+}
+
+async function loadProfileRatings(userId){
+  const list = document.getElementById('profileRatingsList');
+  if(!list) return;
+  list.textContent = 'Loading ratings…';
+  const token = localStorage.getItem('access_token');
+  if(!token) return;
+
+  try{
+    const response = await apiFetch(`http://127.0.0.1:8000/ratings/${encodeURIComponent(userId)}`, {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    const data = await response.json().catch(()=>({}));
+    if(!response.ok) throw new Error(data.detail || 'Could not load ratings');
+    if(!Array.isArray(data)) throw new TypeError('Ratings response must be a JSON array');
+
+    showToast('Ratings loaded.', 'success');
+    list.replaceChildren();
+    if(data.length === 0){
+      renderEmptyState(
+        list,
+        '⭐',
+        'No ratings yet.',
+        'Complete a swap to start building your reputation.'
+      );
+      return;
+    }
+
+    data.forEach(rating => {
+      const entry = document.createElement('article');
+      entry.className = 'profile-rating-entry';
+      const header = document.createElement('div');
+      header.className = 'profile-rating-head';
+      const rater = document.createElement('strong');
+      rater.textContent = rating.rater_name || 'Peer';
+      const score = document.createElement('span');
+      score.className = 'profile-rating-score';
+      score.textContent = `${rating.score}/5`;
+      header.append(rater, score);
+      entry.appendChild(header);
+      if(rating.comment){
+        const comment = document.createElement('p');
+        comment.textContent = rating.comment;
+        entry.appendChild(comment);
+      }
+      if(rating.created_at){
+        const date = document.createElement('time');
+        date.dateTime = rating.created_at;
+        const parsedDate = new Date(rating.created_at);
+        date.textContent = Number.isNaN(parsedDate.getTime())
+          ? ''
+          : parsedDate.toLocaleDateString();
+        entry.appendChild(date);
+      }
+      list.appendChild(entry);
+    });
+  } catch(error){
+    list.textContent = error.message || 'Could not load ratings.';
+    reportApiError(error, 'Could not load ratings.');
+  }
+}
+
+async function loadPeerSuggestions(){
+  const token = localStorage.getItem('access_token');
+  if(!token) return;
+
+  [
+    { svg: document.getElementById('peerGraphSvg'), message: document.getElementById('peerGraphMessage') },
+    { svg: document.getElementById('dashboardPeerGraphSvg'), message: document.getElementById('dashboardPeerGraphMessage') }
+  ].forEach(({ svg, message }) => {
+    svg?.replaceChildren();
+    if(message){
+      message.classList.remove('empty-state');
+      message.textContent = 'Finding your matches…';
+      message.hidden = false;
+    }
+  });
+
+  try{
+    const response = await apiFetch('http://127.0.0.1:8000/peers/suggestions', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    if(!response.ok){
+      const errorData = await response.json().catch(()=>({}));
+      throw new Error(errorData.detail || `Peer suggestions failed (${response.status} ${response.statusText})`);
+    }
+    const peers = await response.json();
+    if(!Array.isArray(peers)){
+      throw new TypeError('Peer suggestions response must be a JSON array');
+    }
+    renderPeerGraph(peers);
+    showToast('Peer matches loaded.', 'success');
+  } catch(err){
+    console.error('[peer suggestions] Fetch, response parsing, or graph rendering failed:', err);
+    reportApiError(err, 'Peer matches are unavailable right now.');
+    ['peerGraphMessage', 'dashboardPeerGraphMessage'].forEach(id => {
+      const message = document.getElementById(id);
+      message.classList.remove('empty-state');
+      message.textContent = 'Peer matches are unavailable right now.';
+      message.hidden = false;
+    });
+  }
+}
+
+function renderPeerGraph(peers){
+  const graphTargets = [
+    { svg: document.getElementById('peerGraphSvg'), message: document.getElementById('peerGraphMessage') },
+    { svg: document.getElementById('dashboardPeerGraphSvg'), message: document.getElementById('dashboardPeerGraphMessage') }
+  ];
+  const center = { x: 190, y: 175 };
+  const svgNamespace = 'http://www.w3.org/2000/svg';
+  const createSvgElement = (tag, attributes) => {
+    const element = document.createElementNS(svgNamespace, tag);
+    Object.entries(attributes).forEach(([key, value]) => element.setAttribute(key, value));
+    return element;
+  };
+  const showEmptyState = message => {
+    const icon = document.createElement('span');
+    icon.className = 'network-message-icon';
+    icon.setAttribute('aria-hidden', 'true');
+    icon.textContent = '🔎';
+    const copy = document.createElement('span');
+    copy.className = 'network-message-copy';
+    copy.textContent = 'No peer matches yet. Add skills you want to learn to get matched.';
+    message.classList.add('empty-state');
+    message.replaceChildren(icon, copy);
+  };
+
+  graphTargets.forEach(({ svg, message }) => {
+    if(!svg || !message) return;
+
+    // Rebuild each peer from API data and keep the YOU node anchored at center.
+    svg.replaceChildren();
+    if(!Array.isArray(peers) || peers.length === 0){
+      showEmptyState(message);
+      message.hidden = false;
+    } else {
+      message.classList.remove('empty-state');
+      message.hidden = true;
+      peers.forEach((peer, index) => {
+        const angle = -Math.PI / 2 + (2 * Math.PI * index) / peers.length;
+        const radius = peers.length > 8 && index % 2 ? 88 : 126;
+        const x = center.x + Math.cos(angle) * radius;
+        const y = center.y + Math.sin(angle) * radius;
+        const color = ['var(--color-accent)', 'var(--color-error)', 'var(--color-background)'][index % 3];
+        const match = (peer.matching_skills || [])[0] || null;
+        const skillPair = typeof match === 'string'
+          ? match
+          : [match?.my_skill, match?.their_skill].filter(Boolean).join(' ↔ ');
+        const skill = typeof match === 'string'
+          ? match
+          : (match?.their_skill || match?.my_skill || '');
+        const score = typeof match === 'object' && match && Number.isFinite(Number(match.score))
+          ? Number(match.score)
+          : null;
+        const verifiedSkillKeys = new Set(
+          (peer.verified_skills || [])
+            .filter(value => typeof value === 'string')
+            .map(value => value.trim().toLocaleLowerCase())
+        );
+        const proficiency = (peer.skill_proficiency || []).find(item =>
+          item.skill?.trim().toLocaleLowerCase() === skill.trim().toLocaleLowerCase()
+        );
+        const verification = match?.verification || null;
+        const isSkillVerified = verification
+          ? verification.is_verified === true
+          : Boolean(skill) && verifiedSkillKeys.has(skill.trim().toLocaleLowerCase());
+        const fullMatchLabel = verification
+          ? `${skill} - ${verification.score === null ? verification.proficiency_label : `${verification.score}/5 ${verification.proficiency_label}`}`
+          : proficiency
+          ? `${proficiency.proficiency_level} ${proficiency.score}/5 · ${skill}`
+          : (score === null ? skillPair : `${skillPair} · ${score.toFixed(2)}`);
+        const maxMatchLength = isSkillVerified ? 26 : 30;
+        const shortMatchLabel = fullMatchLabel.length > maxMatchLength
+          ? `${fullMatchLabel.slice(0, maxMatchLength - 1)}…`
+          : fullMatchLabel;
+        const matchLabel = `${shortMatchLabel}${isSkillVerified ? ' ✓' : ''}`;
+        const skillTag = skill.slice(0, 2).toUpperCase() || '?';
+
+        svg.appendChild(createSvgElement('line', {
+          x1: center.x, y1: center.y, x2: x, y2: y,
+          stroke: 'var(--color-bg-dark-raised)', 'stroke-width': '1.5'
+        }));
+        const peerCircle = createSvgElement('circle', {
+          cx: x, cy: y, r: '20', fill: color, stroke: 'var(--color-bg-dark-raised)',
+          'stroke-width': '1', role: 'button', tabindex: '0',
+          'aria-label': `Send swap request to ${peer.name} for ${matchLabel || skill}`
+        });
+        const peerTitle = createSvgElement('title', {});
+        const verificationTitle = verification
+          ? ` - ${verification.score === null ? verification.proficiency_label : `${verification.score}/5 ${verification.proficiency_label}`}`
+          : (proficiency
+            ? ` · ${proficiency.proficiency_level} (${proficiency.score}/5)`
+            : (isSkillVerified ? ' · Verified' : ''));
+        // SVG titles expose the complete verification label even when the graph caption is shortened.
+        peerTitle.textContent = `${peer.name}: ${skill}${verificationTitle}`;
+        peerCircle.appendChild(peerTitle);
+        const selectPeer = () => openSwapRequestDialog(peer);
+        peerCircle.addEventListener('click', selectPeer);
+        peerCircle.addEventListener('keydown', event => {
+          if(event.key === 'Enter' || event.key === ' '){
+            event.preventDefault();
+            selectPeer();
+          }
+        });
+        svg.appendChild(peerCircle);
+
+        const skillLabel = createSvgElement('text', {
+          x, y: y + 3, 'text-anchor': 'middle', class: 'node-tag', fill: 'var(--color-text-dark)'
+        });
+        skillLabel.textContent = skillTag;
+        svg.appendChild(skillLabel);
+
+        const nameLabel = createSvgElement('text', {
+          x, y: y + 34, 'text-anchor': 'middle', class: 'node-label'
+        });
+        const peerBadges = Array.isArray(peer.badges) ? peer.badges : [];
+        const peerBadgeIcons = peerBadges
+          .map(badge => badge?.icon)
+          .filter(icon => typeof icon === 'string' && icon.trim());
+        nameLabel.textContent = `${peer.name}${peerBadgeIcons.length ? ` ${peerBadgeIcons.join(' ')}` : ''}`;
+        nameLabel.setAttribute(
+          'aria-label',
+          peerBadgeIcons.length
+            ? `${peer.name}, badges: ${peerBadges.map(badge => badge.name).filter(Boolean).join(', ')}`
+            : peer.name
+        );
+        svg.appendChild(nameLabel);
+
+        const matchLabelElement = createSvgElement('text', {
+          x, y: y + 47, 'text-anchor': 'middle', class: 'node-label'
+        });
+        matchLabelElement.textContent = matchLabel;
+        svg.appendChild(matchLabelElement);
+      });
+    }
+
+    svg.appendChild(createSvgElement('circle', {
+      cx: center.x, cy: center.y, r: '26', fill: 'var(--color-primary)'
+    }));
+    const youLabel = createSvgElement('text', {
+      x: center.x, y: center.y + 4, 'text-anchor': 'middle', class: 'node-tag', fill: 'var(--color-card-bg)'
+    });
+    youLabel.textContent = 'YOU';
+    svg.appendChild(youLabel);
+  });
+}
+
+let selectedPeerForSwap = null;
+
+function openSwapRequestDialog(peer){
+  selectedPeerForSwap = peer;
+  document.getElementById('swapPeerName').textContent = peer.name;
+  const peerBadges = Array.isArray(peer.badges) ? peer.badges : [];
+  const badgeIcons = document.getElementById('swapPeerBadges');
+  badgeIcons.replaceChildren();
+  badgeIcons.hidden = peerBadges.length === 0;
+  badgeIcons.title = peerBadges.map(badge => badge.name).filter(Boolean).join(', ');
+  peerBadges.forEach(badge => {
+    if(typeof badge.icon !== 'string' || !badge.icon) return;
+    const icon = document.createElement('span');
+    icon.textContent = badge.icon;
+    icon.setAttribute('aria-label', badge.name || 'Earned badge');
+    badgeIcons.appendChild(icon);
+  });
+  const match = (peer.matching_skills || [])[0] || '';
+  const skill = typeof match === 'string' ? match : (match.their_skill || match.my_skill || '');
+  const verification = match?.verification;
+  const verificationLabel = verification
+    ? (verification.score === null
+      ? verification.proficiency_label
+      : `${verification.score}/5 · ${verification.proficiency_label}`)
+    : 'Verification details unavailable';
+  document.getElementById('swapSkillInput').value = skill;
+  const verificationElement = document.getElementById('swapSkillVerification');
+  verificationElement.textContent = `${skill} - ${verificationLabel}`;
+  verificationElement.classList.toggle('verified', verification?.is_verified === true);
+  document.getElementById('sendSwapDialog').showModal();
+}
+
+function closeSwapRequestDialog(){
+  document.getElementById('sendSwapDialog').close();
+  selectedPeerForSwap = null;
+}
+
+function setSwapRequestFeedback(message, type=''){
+  const feedback = document.getElementById('swapRequestFeedback');
+  feedback.textContent = message;
+  feedback.classList.remove('success', 'error');
+  if(type) feedback.classList.add(type);
+}
+
+async function sendSwapRequest(){
+  if(!selectedPeerForSwap) return;
+  const token = localStorage.getItem('access_token');
+  if(!token){
+    closeSwapRequestDialog();
+    showPage('login');
+    showToast('Your session expired. Please log in again.', 'info');
+    return;
+  }
+
+  const button = document.getElementById('sendSwapRequestButton');
+  const restoreButton = beginButtonLoading(button, 'Sending...');
+  if(!restoreButton) return;
+  try{
+    const response = await apiFetch('http://127.0.0.1:8000/swap-request', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      body: JSON.stringify({
+        to_user_id: selectedPeerForSwap.id,
+        skill: document.getElementById('swapSkillInput').value
+      })
+    });
+    const data = await response.json().catch(()=>({}));
+    console.log('[swap request] POST /swap-request response:', { status: response.status, data });
+    if(!response.ok) throw new Error(data.detail || 'Could not send swap request');
+
+    const peerName = selectedPeerForSwap.name;
+    closeSwapRequestDialog();
+    setSwapRequestFeedback(`Swap request sent to ${peerName}.`, 'success');
+    showToast('Swap request sent!', 'success');
+  } catch(err){
+    const message = reportApiError(err, 'Could not send swap request.');
+    setSwapRequestFeedback(message, 'error');
+  } finally{
+    restoreButton();
+  }
+}
+
+async function loadReceivedRequests(){
+  const token = localStorage.getItem('access_token');
+  const pendingList = document.getElementById('receivedRequestsList');
+  const sentList = document.getElementById('sentRequestsList');
+  const acceptedList = document.getElementById('acceptedSwapsList');
+  if(!token || !pendingList || !sentList || !acceptedList) return;
+
+  pendingList.textContent = 'Loading requests…';
+  sentList.textContent = 'Loading sent requests…';
+  acceptedList.textContent = 'Loading swaps…';
+  try{
+    const headers = { 'Authorization': 'Bearer ' + token };
+    const [pendingResponse, sentResponse, acceptedResponse] = await Promise.all([
+      apiFetch('http://127.0.0.1:8000/swap-requests/received', { headers }),
+      apiFetch('http://127.0.0.1:8000/swap-requests/sent', { headers }),
+      apiFetch('http://127.0.0.1:8000/swap-requests/accepted', { headers })
+    ]);
+    const [pendingData, sentData, acceptedData] = await Promise.all([
+      pendingResponse.json().catch(()=>({})),
+      sentResponse.json().catch(()=>({})),
+      acceptedResponse.json().catch(()=>({}))
+    ]);
+    console.log('[swap requests] GET /swap-requests/received response:', { status: pendingResponse.status, data: pendingData });
+    console.log('[swap requests] GET /swap-requests/sent response:', { status: sentResponse.status, data: sentData });
+    console.log('[swap requests] GET /swap-requests/accepted response:', { status: acceptedResponse.status, data: acceptedData });
+    if(!pendingResponse.ok) throw new Error(pendingData.detail || 'Could not load requests');
+    if(!sentResponse.ok) throw new Error(sentData.detail || 'Could not load sent requests');
+    if(!acceptedResponse.ok) throw new Error(acceptedData.detail || 'Could not load accepted swaps');
+    showToast('Requests loaded.', 'success');
+    showToast('Sent requests loaded.', 'success');
+    showToast('Accepted swaps loaded.', 'success');
+    renderReceivedRequests(pendingData, acceptedData, sentData);
+  } catch(err){
+    const message = reportApiError(err, 'Could not load requests.');
+    pendingList.textContent = message;
+    sentList.textContent = 'Could not load sent requests.';
+    acceptedList.textContent = 'Could not load accepted swaps.';
+    setSwapRequestFeedback(message, 'error');
+  }
+}
+
+function renderEmptyState(list, iconText, titleText, descriptionText){
+  list.replaceChildren();
+  const emptyState = document.createElement('div');
+  emptyState.className = 'request-empty-state';
+  const icon = document.createElement('span');
+  icon.className = 'request-empty-icon';
+  icon.setAttribute('aria-hidden', 'true');
+  icon.textContent = iconText;
+  const copy = document.createElement('div');
+  copy.className = 'request-empty-copy';
+  const title = document.createElement('strong');
+  title.textContent = titleText;
+  const description = document.createElement('span');
+  description.textContent = descriptionText;
+  copy.append(title, description);
+  emptyState.append(icon, copy);
+  list.appendChild(emptyState);
+}
+
+function renderReceivedRequests(requests, acceptedSwaps=[], sentRequests=[]){
+  try{
+    renderPendingRequests(requests);
+  } catch(error){
+    console.error('[swap requests] Could not render pending requests:', error);
+    document.getElementById('receivedRequestsList').textContent = 'Could not display pending requests.';
+    showToast('Could not display pending requests.', 'error');
+  }
+
+  try{
+    renderSentRequests(sentRequests);
+  } catch(error){
+    console.error('[swap requests] Could not render sent requests:', error);
+    document.getElementById('sentRequestsList').textContent = 'Could not display sent requests.';
+    showToast('Could not display sent requests.', 'error');
+  }
+
+  try{
+    renderAcceptedSwaps(acceptedSwaps);
+  } catch(error){
+    console.error('[swap requests] Could not render accepted swaps:', error);
+    document.getElementById('acceptedSwapsList').textContent = 'Could not load accepted swaps.';
+    showToast('Could not display accepted swaps.', 'error');
+  }
+
+  try{
+    acceptedMessagingPeers = Array.isArray(acceptedSwaps)
+      ? Array.from(new Map(acceptedSwaps
+          .filter(swap => Number.isInteger(swap.peer_user_id))
+          .map(swap => [swap.peer_user_id, { id: swap.peer_user_id, name: swap.peer_name }])
+        ).values())
+      : [];
+    renderMessagingConversationList();
+  } catch(error){
+    console.error('[messages] Could not render conversation list:', error);
+    document.getElementById('messagesStatus').textContent = 'Conversations could not be displayed.';
+    showToast('Could not display conversations.', 'error');
+  }
+}
+
+function renderPendingRequests(requests){
+  const list = document.getElementById('receivedRequestsList');
+  list.replaceChildren();
+  if(!Array.isArray(requests) || requests.length === 0){
+    renderEmptyState(
+      list,
+      '📥',
+      'No pending requests right now.',
+      'New requests from peers will appear here.'
+    );
+    return;
+  }
+
+  requests.forEach(request => {
+    const row = document.createElement('article');
+    row.className = 'received-request';
+    const summary = document.createElement('p');
+    const sender = document.createElement('strong');
+    sender.textContent = request.from_user_name;
+    summary.append(sender, document.createTextNode(` wants to swap ${request.skill}.`));
+    row.appendChild(summary);
+
+    const actions = document.createElement('div');
+    actions.className = 'request-actions';
+    const acceptButton = document.createElement('button');
+    acceptButton.className = 'btn btn-primary';
+    acceptButton.type = 'button';
+    acceptButton.textContent = 'Accept';
+    acceptButton.addEventListener('click', event =>
+      respondToSwapRequest(request.id, 'accept', event.currentTarget)
+    );
+    const rejectButton = document.createElement('button');
+    rejectButton.className = 'btn btn-secondary';
+    rejectButton.type = 'button';
+    rejectButton.textContent = 'Reject';
+    rejectButton.addEventListener('click', event =>
+      respondToSwapRequest(request.id, 'reject', event.currentTarget)
+    );
+    actions.append(acceptButton, rejectButton);
+    row.appendChild(actions);
+    list.appendChild(row);
+  });
+}
+
+function renderSentRequests(requests){
+  const list = document.getElementById('sentRequestsList');
+  list.replaceChildren();
+  if(!Array.isArray(requests) || requests.length === 0){
+    renderEmptyState(
+      list,
+      '📤',
+      "You haven't sent any swap requests yet.",
+      'Send a request to a matched peer to start a swap.'
+    );
+    return;
+  }
+
+  requests.forEach(request => {
+    const row = document.createElement('article');
+    row.className = 'received-request';
+    const summary = document.createElement('p');
+    const recipient = document.createElement('strong');
+    recipient.textContent = request.to_user_name;
+    summary.append('To ', recipient, document.createTextNode(` · ${request.skill}`));
+    const status = document.createElement('span');
+    status.className = 'request-feedback';
+    status.textContent = request.status;
+    row.append(summary, status);
+    list.appendChild(row);
+  });
+}
+
+function renderAcceptedSwaps(acceptedSwaps){
+  const list = document.getElementById('acceptedSwapsList');
+  list.replaceChildren();
+  if(!Array.isArray(acceptedSwaps) || acceptedSwaps.length === 0){
+    renderEmptyState(
+      list,
+      '🤝',
+      'No accepted swaps yet.',
+      "Once a request is accepted, it'll show up here."
+    );
+    return;
+  }
+
+  acceptedSwaps.forEach(swap => {
+    const row = document.createElement('article');
+    row.className = 'received-request';
+    const summary = document.createElement('p');
+    const peer = document.createElement('strong');
+    peer.textContent = swap.peer_name;
+    summary.append(peer, document.createTextNode(` · ${swap.skill}`));
+    row.appendChild(summary);
+
+    const messageButton = document.createElement('button');
+    messageButton.className = 'btn btn-primary';
+    messageButton.type = 'button';
+    messageButton.textContent = 'Message';
+    messageButton.addEventListener('click', () =>
+      openMessageConversation(swap.peer_user_id, swap.peer_name)
+    );
+    row.appendChild(messageButton);
+
+    if(!swap.rated_by_current_user){
+      const rateButton = document.createElement('button');
+      rateButton.className = 'btn btn-secondary';
+      rateButton.type = 'button';
+      rateButton.textContent = 'Rate this swap';
+      rateButton.addEventListener('click', () => openRatingDialog(swap));
+      row.appendChild(rateButton);
+    } else {
+      const ratedLabel = document.createElement('span');
+      ratedLabel.className = 'request-feedback';
+      ratedLabel.textContent = 'You rated this swap';
+      row.appendChild(ratedLabel);
+    }
+    list.appendChild(row);
+  });
+}
+
+function renderMessagingConversationList(){
+  const list = document.getElementById('messageConversationList');
+  if(!list) return;
+  const unreadTotal = conversationSummaries.reduce(
+    (total, summary) => total + Number(summary.unread_count || 0),
+    0,
+  );
+  const unreadBadge = document.getElementById('messageUnreadTotal');
+  if(unreadBadge){
+    unreadBadge.hidden = unreadTotal === 0;
+    unreadBadge.textContent = unreadTotal > 99 ? '99+' : String(unreadTotal);
+    unreadBadge.setAttribute('aria-label', `${unreadTotal} unread messages`);
+    unreadBadge.title = `${unreadTotal} unread messages`;
+  }
+
+  const peers = new Map();
+  acceptedMessagingPeers.forEach(peer => peers.set(peer.id, { ...peer, summary: null }));
+  conversationSummaries.forEach(summary => {
+    const existing = peers.get(summary.other_user_id) || {};
+    peers.set(summary.other_user_id, {
+      id: summary.other_user_id,
+      name: summary.other_user_name || existing.name || 'Peer',
+      summary
+    });
+  });
+
+  const orderedPeers = Array.from(peers.values()).sort((first, second) => {
+    const firstDate = Date.parse(first.summary?.last_message_at || '') || 0;
+    const secondDate = Date.parse(second.summary?.last_message_at || '') || 0;
+    return secondDate - firstDate || first.name.localeCompare(second.name);
+  });
+  list.replaceChildren();
+  if(orderedPeers.length === 0){
+    renderEmptyState(
+      list,
+      '💬',
+      'No conversations yet.',
+      'Accept a swap request to start chatting with a peer.'
+    );
+    return;
+  }
+
+  orderedPeers.forEach(peer => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'btn btn-secondary message-peer-button';
+    button.dataset.peerId = String(peer.id);
+    button.classList.toggle('active', activeMessagePeer?.id === peer.id);
+    button.setAttribute('aria-pressed', String(activeMessagePeer?.id === peer.id));
+    const copy = document.createElement('span');
+    copy.className = 'message-peer-copy';
+    const name = document.createElement('strong');
+    name.textContent = peer.name;
+    const preview = document.createElement('span');
+    preview.textContent = peer.summary?.last_message_content || 'Start a conversation';
+    copy.append(name, preview);
+    button.appendChild(copy);
+
+    const unreadCount = Number(peer.summary?.unread_count || 0);
+    if(unreadCount > 0){
+      const unread = document.createElement('span');
+      unread.className = 'message-unread-count';
+      unread.textContent = unreadCount > 99 ? '99+' : String(unreadCount);
+      unread.setAttribute('aria-label', `${unreadCount} unread messages`);
+      button.appendChild(unread);
+    }
+    button.addEventListener('click', event =>
+      openMessageConversation(peer.id, peer.name, event.currentTarget)
+    );
+    list.appendChild(button);
+  });
+}
+
+function formatMessageTimestamp(value){
+  const date = new Date(value);
+  return Number.isNaN(date.getTime())
+    ? ''
+    : date.toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+}
+
+function renderMessageThread(messages){
+  const log = document.getElementById('messageLog');
+  if(!log) return;
+  const wasAtBottom = log.scrollHeight - log.scrollTop - log.clientHeight < 48;
+  log.replaceChildren();
+  if(!Array.isArray(messages) || messages.length === 0){
+    renderEmptyState(
+      log,
+      activeMessagePeer ? '👋' : '💬',
+      activeMessagePeer ? 'Say hi!' : 'Choose a conversation.',
+      activeMessagePeer
+        ? 'Send the first message to start the conversation.'
+        : 'Select an accepted peer to start chatting.'
+    );
+    return;
+  }
+
+  messages.forEach(message => {
+    const outgoing = message.sender_id === currentUserId;
+    const row = document.createElement('article');
+    row.className = `message-row${outgoing ? ' outgoing' : ''}`;
+    const bubble = document.createElement('div');
+    bubble.className = 'message-bubble';
+    bubble.textContent = message.content;
+    const time = document.createElement('span');
+    time.className = 'message-time';
+    time.textContent = `${outgoing ? 'You' : message.sender_name} · ${formatMessageTimestamp(message.created_at)}`;
+    row.append(bubble, time);
+    log.appendChild(row);
+  });
+  if(wasAtBottom) log.scrollTop = log.scrollHeight;
+}
+
+async function openMessageConversation(peerId, peerName, button){
+  const id = Number(peerId);
+  if(!Number.isInteger(id) || id <= 0) return;
+  const restoreButton = beginButtonLoading(button, 'Loading conversation...');
+  if(!restoreButton) return;
+  activeMessagePeer = { id, name: peerName || 'Peer' };
+  document.querySelectorAll('.message-peer-button').forEach(peerButton => {
+    const isActive = Number(peerButton.dataset.peerId) === id;
+    peerButton.classList.toggle('active', isActive);
+    peerButton.setAttribute('aria-pressed', String(isActive));
+  });
+  document.getElementById('messagePeerName').textContent = activeMessagePeer.name;
+  document.getElementById('messageInput').disabled = false;
+  document.getElementById('sendMessageButton').disabled = false;
+  document.getElementById('messagesStatus').textContent = 'Loading conversation…';
+  try{
+    await loadMessageThread(id);
+  } finally{
+    restoreButton();
+  }
+}
+
+async function loadMessageThread(peerId){
+  const token = localStorage.getItem('access_token');
+  if(!token || !peerId) return;
+  const requestId = ++messageThreadRequestId;
+  try{
+    const response = await apiFetch(`http://127.0.0.1:8000/messages/${encodeURIComponent(peerId)}`, {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    const data = await response.json().catch(()=>({}));
+    if(!response.ok) throw new Error(data.detail || 'Could not load this conversation');
+    if(requestId !== messageThreadRequestId || activeMessagePeer?.id !== peerId) return;
+    messageThreadFailureNotified = false;
+    renderMessageThread(data);
+    document.getElementById('messagesStatus').textContent = 'Messages refresh every five seconds.';
+    showToast('Conversation loaded.', 'success');
+    conversationSummaries = conversationSummaries.map(summary =>
+      summary.other_user_id === peerId ? { ...summary, unread_count: 0 } : summary
+    );
+    renderMessagingConversationList();
+  } catch(error){
+    if(requestId === messageThreadRequestId){
+      const message = error.feedbackShown
+        ? error.message
+        : reportApiError(error, 'Could not load this conversation.');
+      document.getElementById('messagesStatus').textContent = message;
+      messageThreadFailureNotified = true;
+    }
+  }
+}
+
+async function refreshMessaging(){
+  if(messageRefreshInProgress) return;
+  const token = localStorage.getItem('access_token');
+  if(!token) return;
+  messageRefreshInProgress = true;
+  try{
+    const response = await apiFetch('http://127.0.0.1:8000/conversations', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    const data = await response.json().catch(()=>({}));
+    if(!response.ok) throw new Error(data.detail || 'Could not refresh conversations');
+    messageRefreshFailureNotified = false;
+    const nextSummaries = Array.isArray(data) ? data : [];
+    showToast('Conversations refreshed.', 'success');
+    const changed = JSON.stringify(nextSummaries) !== JSON.stringify(conversationSummaries);
+    conversationSummaries = nextSummaries;
+    if(changed) renderMessagingConversationList();
+    if(activeMessagePeer) await loadMessageThread(activeMessagePeer.id);
+  } catch(error){
+    document.getElementById('messagesStatus').textContent = error.feedbackShown
+      ? error.message
+      : reportApiError(error, 'Messages could not be refreshed.');
+    messageRefreshFailureNotified = true;
+  } finally{
+    messageRefreshInProgress = false;
+  }
+}
+
+function startMessagePolling(){
+  stopMessagePolling();
+  refreshMessaging();
+  messagePollingTimer = setInterval(() => {
+    if(!document.getElementById('page-dashboard')?.classList.contains('active')){
+      stopMessagePolling();
+      return;
+    }
+    refreshMessaging();
+  }, 5000);
+}
+
+function stopMessagePolling(){
+  if(messagePollingTimer !== null){
+    clearInterval(messagePollingTimer);
+    messagePollingTimer = null;
+  }
+  messageThreadRequestId++;
+}
+
+// Refresh the aggregate badge only while an authenticated dashboard is active.
+async function refreshNotificationSummary(){
+  const token = localStorage.getItem('access_token');
+  const dashboard = document.getElementById('page-dashboard');
+  if(!token || !dashboard?.classList.contains('active')){
+    stopNotificationPolling();
+    return;
+  }
+  if(notificationRequestController) return;
+
+  const controller = new AbortController();
+  notificationRequestController = controller;
+  try{
+    const response = await apiFetch('http://127.0.0.1:8000/notifications/summary', {
+      headers: { 'Authorization': 'Bearer ' + token },
+      signal: controller.signal
+    });
+    const data = await response.json().catch(()=>({}));
+    if(controller.signal.aborted
+      || token !== localStorage.getItem('access_token')
+      || !dashboard.classList.contains('active')) return;
+    if(!response.ok) throw new Error(data.detail || 'Could not load notifications');
+    renderNotificationSummary(data);
+    notificationFailureNotified = false;
+    showToast('Notifications refreshed.', 'success');
+  } catch(error){
+    if(error.name !== 'AbortError'){
+      console.error('[notifications] Could not refresh summary:', error);
+      const button = document.getElementById('notificationNavButton');
+      button.title = 'Notifications could not be refreshed';
+      button.setAttribute('aria-label', 'Notifications could not be refreshed');
+      if(!error.feedbackShown) reportApiError(error, 'Notifications could not be refreshed.');
+      notificationFailureNotified = true;
+    }
+  } finally{
+    if(notificationRequestController === controller) notificationRequestController = null;
+  }
+}
+
+function renderNotificationSummary(summary){
+  const badge = document.getElementById('notificationTotal');
+  const button = document.getElementById('notificationNavButton');
+  if(!badge || !button) return;
+
+  const pendingRequests = Number(summary.pending_swap_requests) || 0;
+  const unreadMessages = Number(summary.unread_messages) || 0;
+  const total = Number(summary.total) || 0;
+  const details = [];
+  if(pendingRequests > 0){
+    details.push(`${pendingRequests} new ${pendingRequests === 1 ? 'request' : 'requests'}`);
+  }
+  if(unreadMessages > 0){
+    details.push(`${unreadMessages} unread ${unreadMessages === 1 ? 'message' : 'messages'}`);
+  }
+  const description = details.join(' · ') || 'No new notifications';
+  badge.hidden = total === 0;
+  badge.textContent = total > 99 ? '99+' : String(total);
+  button.title = description;
+  button.setAttribute('aria-label', `Notifications: ${description}`);
+}
+
+function resetNotificationSummary(){
+  renderNotificationSummary({ pending_swap_requests: 0, unread_messages: 0, total: 0 });
+}
+
+function startNotificationPolling(){
+  stopNotificationPolling();
+  refreshNotificationSummary();
+  notificationPollingTimer = setInterval(() => {
+    if(!localStorage.getItem('access_token')
+      || !document.getElementById('page-dashboard')?.classList.contains('active')){
+      stopNotificationPolling();
+      return;
+    }
+    refreshNotificationSummary();
+  }, 15000);
+}
+
+function stopNotificationPolling(){
+  if(notificationPollingTimer !== null){
+    clearInterval(notificationPollingTimer);
+    notificationPollingTimer = null;
+  }
+  if(notificationRequestController){
+    notificationRequestController.abort();
+    notificationRequestController = null;
+  }
+}
+
+function updateMessageCharacterCount(){
+  const input = document.getElementById('messageInput');
+  document.getElementById('messageCharacterCount').textContent = `${input.value.length}/500`;
+}
+
+document.getElementById('messageInput').addEventListener('input', updateMessageCharacterCount);
+
+async function sendDirectMessage(event){
+  event.preventDefault();
+  if(!activeMessagePeer) return;
+  const token = localStorage.getItem('access_token');
+  const input = document.getElementById('messageInput');
+  const button = document.getElementById('sendMessageButton');
+  const content = input.value.trim();
+  if(!token){
+    showToast('Your session expired. Please log in again.', 'info');
+    showPage('login');
+    return;
+  }
+  if(!content){
+    document.getElementById('messagesStatus').textContent = 'Message cannot be empty.';
+    showToast('Message cannot be empty.', 'error');
+    input.focus();
+    return;
+  }
+  if(input.value.length > 500){
+    showToast('Messages must be 500 characters or fewer.', 'error');
+    return;
+  }
+
+  const restoreButton = beginButtonLoading(button, 'Sending...');
+  if(!restoreButton) return;
+  try{
+    const response = await apiFetch('http://127.0.0.1:8000/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      body: JSON.stringify({ receiver_id: activeMessagePeer.id, content })
+    });
+    const data = await response.json().catch(()=>({}));
+    if(!response.ok) throw new Error(data.detail || 'Could not send your message');
+    input.value = '';
+    updateMessageCharacterCount();
+    document.getElementById('messagesStatus').textContent = 'Message sent.';
+    showToast('Message sent.', 'success');
+    await refreshMessaging();
+  } catch(error){
+    document.getElementById('messagesStatus').textContent = error.message || 'Could not send your message.';
+    showToast(error.message || 'Could not send your message.', 'error');
+  } finally{
+    restoreButton(!activeMessagePeer);
+  }
+}
+
+async function respondToSwapRequest(requestId, action, button){
+  const token = localStorage.getItem('access_token');
+  if(!token){
+    showToast('Your session expired. Please log in again.', 'info');
+    showPage('login');
+    return;
+  }
+
+  const restoreButton = beginButtonLoading(
+    button,
+    action === 'accept' ? 'Accepting...' : 'Rejecting...'
+  );
+  if(!restoreButton) return;
+
+  try{
+    const response = await apiFetch(`http://127.0.0.1:8000/swap-request/${requestId}/${action}`, {
+      method: 'PUT',
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    const data = await response.json().catch(()=>({}));
+    if(!response.ok) throw new Error(data.detail || `Could not ${action} request`);
+
+    const message = `Request ${action === 'accept' ? 'accepted' : 'rejected'}.`;
+    setSwapRequestFeedback(message, 'success');
+    showToast(message, 'success');
+    await loadReceivedRequests();
+  } catch(err){
+    const message = err.message || `Could not ${action} request.`;
+    setSwapRequestFeedback(message, 'error');
+    showToast(message, 'error');
+  } finally{
+    restoreButton();
+  }
+}
+
+let selectedSwapForRating = null;
+
+function openRatingDialog(swap){
+  selectedSwapForRating = swap;
+  document.getElementById('ratePeerName').textContent = swap.peer_name;
+  document.getElementById('ratingScoreInput').value = '';
+  setRatingScoreError(false);
+  document.getElementById('ratingCommentInput').value = '';
+  document.getElementById('rateSwapDialog').showModal();
+}
+
+function closeRatingDialog(){
+  document.getElementById('rateSwapDialog').close();
+  selectedSwapForRating = null;
+}
+
+function setRatingScoreError(isError){
+  const input = document.getElementById('ratingScoreInput');
+  const error = document.getElementById('ratingScoreError');
+  input.setAttribute('aria-invalid', String(isError));
+  error.hidden = !isError;
+}
+
+async function submitSwapRating(){
+  if(!selectedSwapForRating) return;
+  const token = localStorage.getItem('access_token');
+  if(!token){
+    showToast('Your session expired. Please log in again.', 'info');
+    showPage('login');
+    return;
+  }
+
+  const scoreInput = document.getElementById('ratingScoreInput');
+  const score = Number(scoreInput.value);
+  if(!scoreInput.value || !Number.isInteger(score) || score < 1 || score > 5){
+    setRatingScoreError(true);
+    setSwapRequestFeedback('Choose a rating from 1 to 5.', 'error');
+    showToast('Choose a rating from 1 to 5.', 'error');
+    return;
+  }
+  setRatingScoreError(false);
+
+  const button = document.getElementById('submitRatingButton');
+  const restoreButton = beginButtonLoading(button, 'Submitting...');
+  if(!restoreButton) return;
+  try{
+    const response = await apiFetch('http://127.0.0.1:8000/rate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      body: JSON.stringify({
+        swap_request_id: selectedSwapForRating.id,
+        score,
+        comment: document.getElementById('ratingCommentInput').value.trim() || null
+      })
+    });
+    const data = await response.json().catch(()=>({}));
+    if(!response.ok) throw new Error(data.detail || 'Could not submit rating');
+
+    closeRatingDialog();
+    setSwapRequestFeedback('Rating submitted successfully.', 'success');
+    showToast('Rating submitted successfully.', 'success');
+    await Promise.all([loadReceivedRequests(), loadProfileExtras()]);
+  } catch(err){
+    const message = err.message || 'Could not submit rating.';
+    setSwapRequestFeedback(message, 'error');
+    showToast(message, 'error');
+  } finally{
+    restoreButton();
+  }
+}
+
+function clearTagInput(wrapId){
+  const wrap = document.getElementById(wrapId);
+  wrap.querySelectorAll('.tag-chip').forEach(chip => chip.remove());
+}
+
+function renderSkillTag(wrapId, text, type){
+  const wrap = document.getElementById(wrapId);
+  const input = wrap.querySelector('input');
+  const chip = document.createElement('span');
+  chip.className = 'tag-chip ' + (type === 'teach' ? 'skill-chip-teach' : 'skill-chip-learn');
+  chip.dataset.skillKey = text.trim().toLocaleLowerCase();
+
+  const skillName = document.createElement('span');
+  skillName.textContent = text.toUpperCase();
+  chip.appendChild(skillName);
+
+  if(type === 'teach'){
+    const verification = currentSkillVerifications.get(chip.dataset.skillKey)
+      || currentVerifiedSkills.has(chip.dataset.skillKey);
+    chip.appendChild(createSkillVerificationControl(text, verification));
+  }
+
+  const removeButton = document.createElement('button');
+  removeButton.type = 'button';
+  removeButton.className = 'btn btn-danger btn-icon tag-remove';
+  removeButton.setAttribute('aria-label', `Remove ${text}`);
+  removeButton.textContent = '×';
+  removeButton.addEventListener('click', () => chip.remove());
+  chip.appendChild(removeButton);
+  wrap.insertBefore(chip, input);
+}
+
+function createSkillVerificationControl(skill, verification){
+  const isVerified = typeof verification === 'object'
+    ? verification.is_verified === true
+    : verification === true;
+  if(isVerified){
+    const badge = document.createElement('span');
+    badge.className = 'skill-verified-badge skill-verification-control';
+    const scoreLabel = Number.isInteger(verification.score)
+      ? `${verification.score}/5 · ${verification.proficiency_label}`
+      : 'Verified';
+    badge.setAttribute('aria-label', `${skill} — ${scoreLabel}`);
+    badge.textContent = `— ${scoreLabel}`;
+    return badge;
+  }
+
+  const verifyButton = document.createElement('button');
+  verifyButton.type = 'button';
+  verifyButton.className = 'btn btn-secondary skill-verify-button skill-verification-control';
+  verifyButton.textContent = 'Verify';
+  verifyButton.setAttribute('aria-label', `Verify ${skill}`);
+  verifyButton.addEventListener('click', event =>
+    openSkillVerificationDialog(skill, event.currentTarget)
+  );
+  return verifyButton;
+}
+
+function setSkillVerificationStatus(skill, isVerified, score){
+  const skillKey = skill.trim().toLocaleLowerCase();
+  const proficiencyLabel = score === 5 ? 'Expert' : score === 4 ? 'Proficient' : 'Not verified';
+  const verification = {
+    skill,
+    is_verified: isVerified,
+    score,
+    proficiency_label: proficiencyLabel
+  };
+  currentSkillVerifications.set(skillKey, verification);
+  if(isVerified){
+    currentVerifiedSkills.add(skillKey);
+  } else {
+    currentVerifiedSkills.delete(skillKey);
+  }
+  renderVerifiedSkillsEmptyState();
+
+  const chip = Array.from(document.querySelectorAll('#teachTagInput .tag-chip'))
+    .find(tag => tag.dataset.skillKey === skillKey);
+  const control = chip?.querySelector('.skill-verification-control');
+  if(control){
+    control.replaceWith(createSkillVerificationControl(skill, verification));
+  }
+}
+
+function renderVerifiedSkillsEmptyState(){
+  const container = document.getElementById('verifiedSkillsEmptyState');
+  if(!container) return;
+  container.hidden = currentVerifiedSkills.size > 0;
+  if(container.hidden){
+    container.replaceChildren();
+    return;
+  }
+  renderEmptyState(
+    container,
+    '✅',
+    'No verified skills yet.',
+    "Click 'Verify' next to a skill you teach to prove your expertise."
+  );
+}
+
+async function openSkillVerificationDialog(skill, button){
+  const dialog = document.getElementById('skillQuizDialog');
+  const form = document.getElementById('skillQuizForm');
+  const result = document.getElementById('skillChatResult');
+  const token = localStorage.getItem('access_token');
+
+  activeSkillQuiz = { skill, finished: false };
+  document.getElementById('skillQuizTitle').textContent = `Verify ${skill}`;
+  document.getElementById('skillQuizQuestions').replaceChildren();
+  document.getElementById('skillQuizStatus').className = 'skill-quiz-status';
+  document.getElementById('skillQuizStatus').textContent = 'Generating your quiz...';
+  result.hidden = true;
+  result.textContent = '';
+  form.hidden = true;
+  document.getElementById('skillQuizSubmitButton').disabled = false;
+  if(!dialog.open) dialog.showModal();
+
+  if(!token){
+    setSkillQuizStatus('Log in to verify a skill.', true);
+    showToast('Log in to verify a skill.', 'error');
+    return;
+  }
+
+  const restoreButton = beginButtonLoading(button, 'Loading quiz...');
+  if(!restoreButton) return;
+  try{
+    const response = await apiFetch(`http://127.0.0.1:8000/verify-skill/${encodeURIComponent(skill)}`, {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    const data = await response.json().catch(()=>({}));
+    if(!response.ok) throw new Error(data.detail || 'Could not start the skill quiz');
+    if(!Array.isArray(data.questions) || data.questions.length !== 5){
+      throw new Error('The quiz service returned an invalid quiz');
+    }
+
+    showToast('Skill quiz loaded.', 'success');
+    renderSkillQuizQuestions(data.questions);
+    form.hidden = false;
+    setSkillQuizStatus('Choose one answer for each of the five questions.');
+  } catch(err){
+    setSkillQuizStatus(err.message || 'Could not start the skill quiz.', true);
+    showToast(err.message || 'Could not start the skill quiz.', 'error');
+  } finally{
+    restoreButton();
+  }
+}
+
+function renderSkillQuizQuestions(questions){
+  const container = document.getElementById('skillQuizQuestions');
+  const fragment = document.createDocumentFragment();
+  questions.forEach((question, questionIndex) => {
+    const fieldset = document.createElement('fieldset');
+    fieldset.className = 'skill-quiz-question';
+    const legend = document.createElement('legend');
+    legend.textContent = `${questionIndex + 1}. ${question.question}`;
+    fieldset.appendChild(legend);
+
+    question.options.forEach((option, optionIndex) => {
+      const label = document.createElement('label');
+      label.className = 'skill-quiz-option';
+      const input = document.createElement('input');
+      input.type = 'radio';
+      input.name = `skillQuizAnswer${questionIndex}`;
+      input.value = String.fromCharCode(65 + optionIndex);
+      input.required = true;
+      const text = document.createElement('span');
+      text.textContent = option;
+      label.append(input, text);
+      fieldset.appendChild(label);
+    });
+    fragment.appendChild(fieldset);
+  });
+  container.replaceChildren(fragment);
+}
+
+function setSkillQuizStatus(message, isError=false){
+  const status = document.getElementById('skillQuizStatus');
+  status.textContent = message;
+  status.classList.toggle('error', isError);
+}
+
+function closeSkillQuizDialog(){
+  document.getElementById('skillQuizDialog').close();
+  activeSkillQuiz = null;
+}
+
+async function submitSkillQuiz(event){
+  event.preventDefault();
+  if(!activeSkillQuiz) return;
+  if(activeSkillQuiz.finished){
+    showToast('This quiz has already been submitted.', 'info');
+    return;
+  }
+
+  const answers = Array.from({length: 5}, (_, index) =>
+    document.querySelector(`input[name="skillQuizAnswer${index}"]:checked`)?.value
+  );
+  const firstUnansweredIndex = answers.findIndex(answer => !answer);
+  if(firstUnansweredIndex !== -1){
+    const message = 'Please select an answer for every question before submitting.';
+    setSkillQuizStatus(message, true);
+    showToast(message, 'error');
+    document.querySelector(`input[name="skillQuizAnswer${firstUnansweredIndex}"]`)?.focus();
+    return;
+  }
+
+  const token = localStorage.getItem('access_token');
+  if(!token){
+    setSkillQuizStatus('Log in to submit your answers.', true);
+    showToast('Log in to submit your answers.', 'error');
+    return;
+  }
+
+  const submitButton = document.getElementById('skillQuizSubmitButton');
+  const restoreButton = beginButtonLoading(submitButton, 'Checking answers...');
+  if(!restoreButton) return;
+  setSkillQuizStatus('Checking answers...');
+  try{
+    const response = await apiFetch(`http://127.0.0.1:8000/verify-skill/${encodeURIComponent(activeSkillQuiz.skill)}/submit`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      body: JSON.stringify({ answers })
+    });
+    const data = await response.json().catch(()=>({}));
+    if(!response.ok) throw new Error(data.detail || 'Could not submit the skill quiz');
+
+    activeSkillQuiz.finished = true;
+    setSkillVerificationStatus(activeSkillQuiz.skill, data.is_verified === true, data.score);
+    const result = document.getElementById('skillChatResult');
+    result.classList.toggle('pass', data.is_verified === true);
+    result.textContent = `Score: ${data.score}/${data.total_questions}. ${data.is_verified ? 'Skill verified.' : 'Not passed yet.'}`;
+    result.hidden = false;
+    setSkillQuizStatus('Verification complete.');
+    showToast(
+      data.is_verified ? 'Skill verified successfully.' : 'Quiz complete. Try again to verify this skill.',
+      data.is_verified ? 'success' : 'info'
+    );
+  } catch(err){
+    setSkillQuizStatus(err.message || 'Could not submit your answers. Please try again.', true);
+    showToast(err.message || 'Could not submit your answers. Please try again.', 'error');
+  } finally{
+    restoreButton();
+  }
+}
+
+function readSkillValues(wrapId){
+  const wrap = document.getElementById(wrapId);
+  const values = Array.from(wrap.querySelectorAll('.tag-chip'))
+    .map(chip => chip.childNodes[0].textContent);
+  values.push(wrap.querySelector('input').value);
+
+  const seen = new Set();
+  const skills = [];
+  let hasOverlongSkill = false;
+  values.flatMap(value => value.split(',')).forEach(value => {
+    const skill = value.trim();
+    if(!skill) return;
+    if(skill.length > 30){
+      hasOverlongSkill = true;
+      return;
+    }
+    const key = skill.toLocaleLowerCase();
+    if(seen.has(key)) return;
+    seen.add(key);
+    skills.push(skill);
+  });
+  return hasOverlongSkill ? null : skills;
+}
+
+function addSkillTag(e, type){
+  if(e.key !== 'Enter' || !e.target.value.trim()) return;
+  e.preventDefault();
+  const wrapId = type === 'teach' ? 'teachTagInput' : 'learnTagInput';
+  const wrap = document.getElementById(wrapId);
+  const existing = new Set(
+    Array.from(wrap.querySelectorAll('.tag-chip'))
+      .map(chip => chip.childNodes[0].textContent.trim().toLocaleLowerCase())
+  );
+  let hasOverlongSkill = false;
+  let skippedDuplicate = false;
+  e.target.value.split(',').map(value => value.trim()).filter(Boolean).forEach(skill => {
+    if(skill.length > 30){
+      hasOverlongSkill = true;
+      return;
+    }
+    const key = skill.toLocaleLowerCase();
+    if(existing.has(key)){
+      skippedDuplicate = true;
+      return;
+    }
+    existing.add(key);
+    renderSkillTag(wrapId, skill, type);
+  });
+  e.target.value = '';
+  if(hasOverlongSkill){
+    showToast('Each skill name must be 30 characters or fewer.', 'error');
+  } else if(skippedDuplicate){
+    showToast('Duplicate skills were skipped.', 'info');
+  }
+}
+
+function updateProfileHeadlineCounter(){
+  const headline = document.getElementById('profileHeadline');
+  const counter = document.getElementById('profileHeadlineCounter');
+  const maxLength = 100;
+  if(headline.textContent.length > maxLength){
+    headline.textContent = headline.textContent.slice(0, maxLength);
+  }
+  const length = headline.textContent.trim().length;
+  counter.textContent = `${length}/${maxLength} characters`;
+  counter.classList.toggle('at-limit', length >= maxLength);
+}
+
+document.getElementById('profileHeadline').addEventListener('input', updateProfileHeadlineCounter);
+
+function setAvatarImage(dataUrl){
+  const circle = document.getElementById('avatarCircle');
+  circle.innerHTML = '<img src="' + dataUrl + '" alt="Profile photo"/>';
+}
+
+async function handleAvatarUpload(event){
+  const file = event.target.files[0];
+  if(!file) return;
+
+  const token = localStorage.getItem('access_token');
+  if(!token){
+    showToast('Log in before uploading a profile photo.', 'error');
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('file', file);
+  const uploadInput = event.target;
+  const uploadControl = uploadInput.closest('.avatar-edit-btn');
+  uploadInput.disabled = true;
+  uploadControl.setAttribute('aria-busy', 'true');
+  uploadControl.title = 'Uploading photo...';
+
+  try{
+    const response = await apiFetch('http://127.0.0.1:8000/upload-avatar', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token },
+      body: formData
+    });
+
+    const data = await response.json();
+    if(!response.ok){
+      throw new Error(data.detail || 'Could not upload avatar');
+    }
+
+    setAvatarImage(new URL(data.avatar_url, 'http://127.0.0.1:8000').href);
+    showToast('Profile photo updated.', 'success');
+  } catch(err){
+    console.error(err);
+    showToast(err.message || 'Could not upload profile photo.', 'error');
+  } finally{
+    uploadInput.disabled = false;
+    uploadControl.removeAttribute('aria-busy');
+    uploadControl.title = 'Change photo';
+  }
+}
+
+async function saveProfile(){
+  updateProfileHeadlineCounter();
+  const headline = document.getElementById('profileHeadline').textContent.trim();
+  const skillsTeach = readSkillValues('teachTagInput');
+  const skillsLearn = readSkillValues('learnTagInput');
+  if(skillsTeach === null || skillsLearn === null){
+    showToast('Each skill name must be 30 characters or fewer.', 'error');
+    return;
+  }
+  const payload = {
+    headline,
+    skills_teach: skillsTeach,
+    skills_learn: skillsLearn
+  };
+
+  const token = localStorage.getItem('access_token');
+  if(!token){
+    showToast('Log in before saving your profile.', 'error');
+    return;
+  }
+
+  const restoreButton = beginButtonLoading(
+    document.getElementById('saveProfileButton'),
+    'Saving...'
+  );
+  if(!restoreButton) return;
+
+  try{
+    console.log('[profile] PUT /profile payload:', payload);
+    const response = await apiFetch('http://127.0.0.1:8000/profile', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await response.json();
+    if(!response.ok){
+      throw new Error(data.detail || 'Could not save profile');
+    }
+
+    const note = document.getElementById('saveNote');
+    note.classList.add('show');
+    setTimeout(()=> note.classList.remove('show'), 1800);
+    showToast('Profile saved.', 'success');
+  } catch(err){
+    console.error(err);
+    showToast(err.message || 'Could not save profile.', 'error');
+  } finally{
+    restoreButton();
+  }
+}
+</script>
+<p class="app-toast" id="appToast" role="status" aria-live="polite" hidden></p>
+</body>
+</html>
